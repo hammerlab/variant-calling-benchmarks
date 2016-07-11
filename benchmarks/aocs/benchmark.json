@@ -1,0 +1,36 @@
+{
+"benchmark": "aocs",
+"benchmark_description": "AOCS benchmark, currently just patient AOCS-034",
+
+"reference": "$HG19_FASTA",
+
+"patients":
+    "AOCS-034": {
+        "reads":
+            "normal blood": {
+                "analyte": "dna",
+                "tissue": "normal",
+                "path": "$AOCS_HDFS_BAMS/EGAZ00001018680_2014_ICGC_IcgcOvarian_AOCS034_1DNA_1NormalBlood_ICGCDBPC20130205008_IlluminaIGNOutsourcing_NoCapture_Bwa_HiSeq.jpearson.header_fixed.bam"
+            },
+            "primary": {
+                "analyte": "dna",
+                "tissue": "tumor",
+                "path": "$AOCS_HDFS_BAMS/EGAZ00001018597_2014_ICGC_IcgcOvarian_AOCS034_1DNA_7PrimaryTumour_ICGCDBPC20130205009_IlluminaIGNOutsourcing_NoCapture_Bwa_HiSeq.jpearson.header_fixed.bam"
+            },
+            "relapse": {
+                "analyte": "dna",
+                "tissue": "tumor",
+                "path": "$AOCS_HDFS_BAMS/EGAZ00001018766_2014_ICGC_IcgcOvarian_AOCS034_1DNA_12Ascites_ICGCDBPC20130205007_IlluminaIGNOutsourcing_NoCapture_Bwa_HiSeq.jpearson.bam"
+            }
+        },
+        "variants": {
+            "published": {
+                "kind": "somatic",
+                "path": "aocs_published_calls.csv"
+            }
+        }
+    }
+}
+
+
+}

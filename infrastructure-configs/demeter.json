@@ -1,0 +1,16 @@
+{
+
+"variables": {
+    "AOCS_HDFS_BAMS": "hdfs:///datasets/ovarian/ega-tim",
+    "HG19_FASTA": "/hpc/users/ahujaa01/reference_genomes/hg19-reference/ucsc.hg19.fasta"
+}
+
+"spark_configuration": {
+    "spark.driver.maxResultSize": "0",
+    "spark.yarn.executor.memoryOverhead": "6000",
+    "spark.executor.memory": "16g",
+    "spark.default.parallelism": "10000"
+
+}
+
+}
