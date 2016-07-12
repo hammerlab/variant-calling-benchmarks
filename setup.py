@@ -10,15 +10,15 @@ setup(
     version=version,
     author="Tim O'Donnell",
     author_email="timodonnell@gmail.com",
-    packages=["variant_calling_benchmarks", "variant_calling_benchmarks.commands"],
+    packages=["variant_calling_benchmarks"],
     url="https://github.com/hammerlab/variant_calling_benchmarks",
     license="Apache License",
     description="Benchmarks for Guacamole variant calling",
     long_description="",
-    download_url = 'https://github.com/hammerlab/variant_calling_benchmarks/tarball/%s' % version,
+    download_url='https://github.com/hammerlab/variant_calling_benchmarks/tarball/%s' % version,
     entry_points={
         'console_scripts': [
-            'vcb-guacamole-local = variant_calling_benchmarks.commands.guacamole_local:run',
+            'vcb-guacamole-local = variant_calling_benchmarks.guacamole_local:run',
         ]
     },
     classifiers=[

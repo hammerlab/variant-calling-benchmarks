@@ -1,6 +1,6 @@
 {
 
-"variables": {
+"substitutions": {
     "AOCS_HDFS_BAMS": "hdfs:///datasets/ovarian/ega-tim",
     "HG19_FASTA": "/hpc/users/ahujaa01/reference_genomes/hg19-reference/ucsc.hg19.fasta"
 }

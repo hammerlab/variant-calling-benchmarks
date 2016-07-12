@@ -4,9 +4,9 @@
 
 "reference": "$HG19_FASTA",
 
-"patients":
+"patients": {
     "AOCS-034": {
-        "reads":
+        "reads": {
             "normal blood": {
                 "analyte": "dna",
                 "tissue": "normal",

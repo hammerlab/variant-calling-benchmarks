@@ -5,22 +5,22 @@
 "reference": "hg19.partial.fasta",
 "reference_fasta_is_partial": "true",
 
-"patients":
+"patients": {
     "AOCS-034": {
-        "reads":
+        "reads": {
             "normal": {
                 "analyte": "dna",
-                "tissue": "normal",
+                "tissue_type": "normal",
                 "path": "normal.bam"
             },
             "primary": {
                 "analyte": "dna",
-                "tissue": "tumor",
+                "tissue_type": "tumor",
                 "path": "primary.bam"
             },
             "recurrence": {
                 "analyte": "dna",
-                "tissue": "tumor",
+                "tissue_type": "tumor",
                 "path": "recurrence.bam"
             }
         },
