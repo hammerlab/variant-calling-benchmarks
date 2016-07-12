@@ -23,14 +23,14 @@
                 "path": "$AOCS_HDFS_BAMS/EGAZ00001018766_2014_ICGC_IcgcOvarian_AOCS034_1DNA_12Ascites_ICGCDBPC20130205007_IlluminaIGNOutsourcing_NoCapture_Bwa_HiSeq.jpearson.bam"
             }
         },
-        "variants": {
-            "published": {
-                "kind": "somatic",
-                "path": "aocs_published_calls.csv"
-            }
-        }
-    }
+    },
 }
 
+"variants": {
+    "published": {
+        "kind": "somatic",
+        "path": "aocs_published_calls.csv"
+    }
+}
 
 }

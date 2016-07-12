@@ -7,6 +7,7 @@
 
 "patients": {
     "AOCS-034": {
+        "loci": "$AUTOSOMAL_LOCI_WITH_CHR_PREFIXES",
         "reads": {
             "normal": {
                 "analyte": "dna",
@@ -23,15 +24,14 @@
                 "tissue_type": "tumor",
                 "path": "recurrence.bam"
             }
-        },
-        "variants": {
-            "published": {
-                "kind": "somatic",
-                "path": "published_calls.csv"
-            }
         }
     }
+},
+"variants": {
+    "published": {
+        "kind": "somatic",
+        "path": "published_calls.csv"
+    }
 }
-
 
 }
