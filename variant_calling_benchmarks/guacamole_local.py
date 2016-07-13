@@ -1,6 +1,5 @@
 '''
-Run guacamole on a benchmark locally
-
+Run guacamole on a benchmark locally.
 '''
 
 import sys
@@ -15,15 +14,15 @@ from . import joint_caller
 
 parser = argparse.ArgumentParser(description=__doc__)
 
-parser.add_argument("configs", nargs="+")
+parser.add_argument("configs", nargs="+", help="JSON config files")
 parser.add_argument("--guacamole-jar", required=True)
-parser.add_argument("--patient", nargs="+")
+parser.add_argument("--patient", nargs="+",
+    help="One or more patients to run. Default: all patients are run.")
 parser.add_argument("--out-dir", required=True)
-parser.add_argument("--keep-temp-files", action="store_true", default=False)
-parser.add_argument("--skip-guacamole", action="store_true", default=False)
-
-
-TEMPORARY_FILES = []
+parser.add_argument("--keep-temp-files", action="store_true", default=False,
+    help="Don't delete temporary files.")
+parser.add_argument("--skip-guacamole", action="store_true", default=False,
+    help="Don't actually run guacamole")
 
 def run(argv=sys.argv[1:]):
     args = parser.parse_args(argv)
@@ -34,8 +33,6 @@ def run(argv=sys.argv[1:]):
         temp_files.finished(not args.keep_temp_files)
 
 def main(args, config):
-    print(config)
-
     patients = args.patient if args.patient else sorted(config['patients'])
 
     patient_to_vcf = {}
@@ -82,4 +79,12 @@ def main(args, config):
             "merged_calls.%s.csv" % (config['benchmark']))
     merged_calls.to_csv(merged_calls_csv, index=False)
     print("Wrote: %s" % merged_calls_csv)
+
+    summary = joint_caller.summary_stats(
+        config, merged_calls)
+    summary_csv = os.path.join(
+            args.out_dir,
+            "summary.%s.csv" % (config['benchmark']))
+    summary.to_csv(summary_csv, index=False)
+    print("Wrote: %s" % summary_csv)
 

@@ -1,3 +1,7 @@
+'''
+Utilities for calling and parsing the results of the guacamole joint caller.
+'''
+
 import collections
 
 import pandas
@@ -12,6 +16,23 @@ from . import temp_files
 # Invoking joint caller
 
 def extract_loci_string(patient, variant_filenames):
+    '''
+    Given a patient and a list of variant CSV files, return a string
+    like "chr1:2-10,chr2-50-51" that gives the loci of all variants
+    containined in the variant files. This is used in the
+    --force-call-loci-from-file option passed to the joint caller.
+
+    Parameters
+    -----------
+    patient : string
+
+    variant_filesnames : list of string
+
+    Returns
+    -----------
+    string
+
+    '''
     loci = []
     for filename in variant_filenames:
         df = pandas.read_csv(filename)
@@ -22,6 +43,20 @@ def extract_loci_string(patient, variant_filenames):
     return ",\n".join(loci)
 
 def make_arguments(config, patient, out_vcf):
+    '''
+    Parameters
+    -----------
+    config : Config
+    
+    patient : string
+
+    out_vcf : string
+        Path to result VCF that we want guacamole to write.
+
+    Returns
+    -----------
+    string
+    '''
     patient_dict = config["patients"][patient]
     reads = patient_dict["reads"]
     only_somatic = all(
@@ -82,6 +117,10 @@ join_columns = [
     "alt"
 ]
 def merge_calls_with_others(config, guacamole_calls_df):
+    '''
+    Join the given guacamole calls dataframe with the comparison variants
+    in the benchmark.
+    '''
     merged = guacamole_calls_df
 
     for (name, info) in config['variants'].items():
@@ -109,6 +148,10 @@ def merge_calls_with_others(config, guacamole_calls_df):
 
 
 def load_results(patient_to_vcf_paths):
+    '''
+    Given a dict of patient -> list of VCF paths written by guacamole for
+    that patient, return a dataframe giving the calls for all patients.
+    '''
     dfs = []
     for (patient, vcf_path) in patient_to_vcf_paths.items():
         calls = varlens.variants_util.load_as_dataframe(
@@ -232,26 +275,51 @@ def parse_joint_caller_fields(df):
     df["called_guacamole"] = df["triggered"] & (~ df["filtered"])
     return df
 
-'''
 
-print("Dataset")
-print("\tPublished calls: %d" % merged.called_pub.sum())
-print("\tGuacamole calls: %d" % merged.called_guac.sum())
-print("\tGuacamole calls before filtering: %d" % merged.triggered.sum())
-print("")
-print("Peformance with filters:")
-print("\tSensitivity: %s" % stat(merged.ix[merged.called_pub].called_guac))
-print("\tSpecificity: %s" % stat(merged.ix[merged.called_guac].called_pub))
-print("")
-print("Performance w/o filters:")
-print("\tSensitivity from pooled calling only: %s"
-      % stat(merged.ix[merged.called_pub].trigger_SOMATIC_POOLED))
-print("\tSensitivity individual calling only: %s"
-      % stat(merged.ix[merged.called_pub].trigger_SOMATIC_INDIVIDUAL))
-print("\tSpecificity: %s" % stat(merged.ix[merged.triggered].called_pub))
-print("\tSpecificity both pooled and individual triggers firing: %s"
-      % stat(merged.ix[merged.trigger_SOMATIC_INDIVIDUAL & merged.trigger_SOMATIC_POOLED].called_pub))
+def summary_stats(config, merged):
+    def stat(bool_series):
+        return (
+            bool_series.sum(), len(bool_series), bool_series.mean() * 100.0)
 
+    rows = []
+    rows.append(("calls", "", merged["called_guacamole"].sum()))
+    rows.append((
+        "calls before filtering",
+        "",
+        merged.triggered.sum()))
 
-'''
+    for name in config["variants"]:
+        called_col = "called_%s" % name
+        rows.append(("calls", name, merged[called_col].sum()))
 
+        # with filters
+        rows.append(("sensitivity with filters", name) + 
+            stat(merged.ix[merged[called_col]].called_guacamole))
+        rows.append(("specificity with filters", name) + 
+            stat(merged.ix[merged.called_guacamole][called_col]))
+
+        # without filters
+        rows.append(
+            ("sensitivity from pooled calling only without filters", name) +
+            stat(merged.ix[merged[called_col]].trigger_SOMATIC_POOLED))
+        rows.append(
+            ("sensitivity individual calling only without filters", name) +
+            stat(merged.ix[merged[called_col]].trigger_SOMATIC_INDIVIDUAL))
+        rows.append(
+            ("specificity without filters", name) +
+            stat(merged.ix[merged.triggered][called_col]))
+        rows.append(
+            ("specificity both pooled and individual triggers firing", name) +
+            stat(
+                merged.ix[
+                    merged.trigger_SOMATIC_INDIVIDUAL &
+                    merged.trigger_SOMATIC_POOLED
+                ][called_col]))
+
+    columns = [
+        "stat", "comparison_dataset",
+        "numerator", "denominator", "percent",
+    ]
+    return pandas.DataFrame(
+        [list(row) + [None] * (len(columns) - len(row)) for row in rows],
+        columns=columns)
