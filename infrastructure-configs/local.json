@@ -1,0 +1,13 @@
+{
+
+"substitutions": {
+    "AOCS_HDFS_BAMS": "hdfs:///datasets/ovarian/ega-tim"
+},
+
+"java_args": ["-Xmx4g", "-XX:MaxPermSize=512m"],
+
+"spark_configuration": {
+    "spark.master": "local[1]"
+}
+
+}

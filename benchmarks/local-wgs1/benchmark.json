@@ -1,0 +1,37 @@
+{
+"benchmark": "local-wgs1",
+"benchmark_description": "Runs locally using BAMs checked into the repo, which were copied from guacamole tests",
+
+"reference": "hg19.partial.fasta",
+"reference_fasta_is_partial": "true",
+
+"patients": {
+    "AOCS-034": {
+        "loci": "$AUTOSOMAL_LOCI_WITH_CHR_PREFIXES",
+        "reads": {
+            "normal": {
+                "analyte": "dna",
+                "tissue_type": "normal",
+                "path": "normal.bam"
+            },
+            "primary": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "primary.bam"
+            },
+            "recurrence": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "recurrence.bam"
+            }
+        }
+    }
+},
+"variants": {
+    "published": {
+        "kind": "somatic",
+        "path": "published_calls.csv"
+    }
+}
+
+}
