@@ -23,9 +23,11 @@ def finished(delete=True):
 
     Call this when the process is finishing.
     '''
+    global TEMPORARY_FILES
     for filename in TEMPORARY_FILES:
         if delete:
             print("Deleting: %s" % filename)
             os.unlink(filename)
         else:
             print("Not deleting: %s" % filename)
+        TEMPORARY_FILES = []

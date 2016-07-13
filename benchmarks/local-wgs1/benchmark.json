@@ -6,7 +6,7 @@
 "reference_fasta_is_partial": "true",
 
 "patients": {
-    "AOCS-034": {
+    "PT1": {
         "loci": "$AUTOSOMAL_LOCI_WITH_CHR_PREFIXES",
         "reads": {
             "normal": {

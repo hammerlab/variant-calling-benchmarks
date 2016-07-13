@@ -9,6 +9,7 @@ import numpy
 
 import varlens
 import varlens.variants_util
+from pyensembl.locus import normalize_chromosome
 
 from . import temp_files
 
@@ -125,6 +126,10 @@ def merge_calls_with_others(config, guacamole_calls_df):
 
     for (name, info) in config['variants'].items():
         df = pandas.read_csv(info.get_substituted('path', path=True))
+
+        # Since we load guacamole VCFs with varcode, the contigs will be
+        # normalized, so we have to normalize them here.
+        df["contig"] = df.contig.map(normalize_chromosome)
         df["called_%s" % name] = True
         merged = pandas.merge(
             merged,
