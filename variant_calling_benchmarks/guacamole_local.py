@@ -36,7 +36,8 @@ def main(args, config):
     patients = args.patient if args.patient else sorted(config['patients'])
 
     patient_to_vcf = {}
-
+    if not os.path.exists(args.out_dir):
+        os.mkdir(args.out_dir)
     for patient in patients:
         out_vcf = os.path.join(
             args.out_dir,
