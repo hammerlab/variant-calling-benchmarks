@@ -1,5 +1,6 @@
 import os
 import tempfile
+import logging
 
 TEMPORARY_FILES = []
 
@@ -15,6 +16,7 @@ def tempfile_path(prefix='', suffix='.data', contents=''):
     fd.write(contents)
     fd.close()
     TEMPORARY_FILES.append(fd.name)
+    logging.info("Created temporary file: %s" % fd.name)
     return fd.name
 
 def finished(delete=True):
@@ -26,8 +28,8 @@ def finished(delete=True):
     global TEMPORARY_FILES
     for filename in TEMPORARY_FILES:
         if delete:
-            print("Deleting: %s" % filename)
+            logging.info("Deleting: %s" % filename)
             os.unlink(filename)
         else:
-            print("Not deleting: %s" % filename)
+            logging.info("Not deleting: %s" % filename)
         TEMPORARY_FILES = []

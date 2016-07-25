@@ -19,6 +19,8 @@ setup(
     entry_points={
         'console_scripts': [
             'vcb-guacamole-local = variant_calling_benchmarks.guacamole_local:run',
+            'vcb-guacamole-cluster = variant_calling_benchmarks.guacamole_cluster:run',
+
         ]
     },
     classifiers=[

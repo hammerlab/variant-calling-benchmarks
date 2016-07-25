@@ -3,14 +3,37 @@
 "substitutions": {
     "AOCS_HDFS_BAMS": "hdfs:///datasets/ovarian/ega-tim",
     "HG19_FASTA": "/hpc/users/ahujaa01/reference_genomes/hg19-reference/ucsc.hg19.fasta"
-}
+},
 
-"spark_configuration": {
-    "spark.driver.maxResultSize": "0",
-    "spark.yarn.executor.memoryOverhead": "6000",
-    "spark.executor.memory": "16g",
-    "spark.default.parallelism": "10000"
+"spark_submit_arguments": [
+    "--deploy-mode", "cluster",
+    "--master", "yarn",
+    "--executor-cores", "6",
+    "--executor-memory", "17g",
+    "--driver-memory", "10g",
 
-}
+    "--conf", "spark.driver.maxResultSize=0",
+    "--conf", "spark.yarn.executor.memoryOverhead=6000",
+    "--conf", "spark.executor.memory=16g",
+    "--conf", "spark.default.parallelism=10000",
+    "--conf", "spark.eventLog.enabled=true",
+    "--conf", "spark.eventLog.dir=hdfs://demeter-nn1.demeter.hpc.mssm.edu:/user/spark/applicationHistory",
+    "--conf", "spark.storage.memoryFraction=0.1",
+    "--conf", "spark.shuffle.service.enabled=true",
+    "--conf", "spark.speculation=true",
+    "--conf", "spark.speculation.interval=1000",
+    "--conf", "spark.speculation.multiplier=2",
+    "--conf", "spark.dynamicAllocation.enabled=true",
+    "--conf", "spark.dynamicAllocation.minExecutors=1",
+    "--conf", "spark.dynamicAllocation.initialExecutors=1",
+    "--conf", "spark.dynamicAllocation.maxExecutors=1000",
+    "--conf", "spark.dynamicAllocation.schedulerBacklogTimeout=1",
+    "--conf", "spark.dynamicAllocation.executorIdleTimeout=300",
+    "--conf", "spark.yarn.max.executor.failures=10000",
+    "--conf", "spark.yarn.maxAppAttempts=1",
+    "--conf", "spark.file.transferTo=false",
+    "--conf", "spark.executor.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -verbose:gc",
+    "--conf", "spark.driver.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -verbose:gc"
+]
 
 }

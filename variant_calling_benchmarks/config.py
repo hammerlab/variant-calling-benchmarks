@@ -3,6 +3,8 @@ import logging
 import string
 import json
 
+from six.moves.urllib.parse import urlparse
+
 def load_config(*filenames):
     '''
     Load the specified JSON config files.
@@ -86,7 +88,9 @@ class ConfigDict(dict):
         '''
         value = self[key]
         result = string.Template(value).substitute(**self.substitutions)
-        if path:
+
+        # If it's an absolute path or a URL, we don't want to change it.
+        if path and not (result.startswith("/") or urlparse(result).scheme):
             result = os.path.join(self.basedir, result)
         return result
 
