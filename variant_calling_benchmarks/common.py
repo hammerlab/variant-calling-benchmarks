@@ -10,7 +10,7 @@ def extract_loci_string(patient, variant_filenames):
     -----------
     patient : string
 
-    variant_filesnames : list of string
+    variant_filenames : list of string
 
     Returns
     -----------
