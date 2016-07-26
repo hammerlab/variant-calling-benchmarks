@@ -28,7 +28,10 @@ def extract_loci_string(patient, variant_filenames):
 
 def add_common_run_args(parser):
     parser.add_argument("configs", nargs="+", help="JSON config files")
-    parser.add_argument("--guacamole-jar", required=True)
+    parser.add_argument("--guacamole-jar", required=True,
+        help="Path to guacamole-VERSION.jar")
+    parser.add_argument("--guacamole-dependencies-jar", required=True,
+        help="Path to guacamole-deps-only-VERSION.jar")
     parser.add_argument("--patient", nargs="+",
         help="One or more patients to run. Default: all patients are run.")
     parser.add_argument("--out-dir", required=True)

@@ -42,7 +42,11 @@ def main(args, config):
         invocation = (
             ["java"] +
             config.get("java_arguments") + 
-            ["-cp", args.guacamole_jar, "org.hammerlab.guacamole.Main"] +
+            ["-cp", ":".join([
+                args.guacamole_jar,
+                args.guacamole_dependencies_jar
+            ])] +
+            ["org.hammerlab.guacamole.Main"] +
             invoke.make_arguments(config, patient, out_vcf))
 
         if args.skip_guacamole:
