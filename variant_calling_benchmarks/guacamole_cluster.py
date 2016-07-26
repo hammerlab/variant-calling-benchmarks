@@ -16,9 +16,6 @@ from .joint_caller import process_results
 
 parser = argparse.ArgumentParser(description=__doc__)
 common.add_common_run_args(parser)
-parser.add_argument("--guacamole-dependencies-jar",
-    required=True,
-    help="Path to guacamole-deps-only-VERSION.jar")
 parser.add_argument("--spark-submit", default="spark-submit",
     help="Path to spark-submit script")
 
