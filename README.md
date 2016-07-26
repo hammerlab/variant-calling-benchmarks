@@ -32,7 +32,7 @@ Note that variant calls are associated with patients, not samples. This is the "
 
 ## Running Locally
 
-Change the `--guacamole-jar` path below for your environment.
+Change the `--guacamole-jar` and `--guacamole-dependencies-jar` paths below for your environment.
 
 ```
 vcb-guacamole-local \
@@ -40,15 +40,15 @@ vcb-guacamole-local \
     infrastructure-configs/local.json \
     guacamole-configs/default.json \
     benchmarks/local-wgs1/benchmark.json \
-    --guacamole-jar ~/sinai/git/guacamole/target/guacamole-with-dependencies-0.0.1-SNAPSHOT.jar \
+    --guacamole-jar ~/sinai/git/guacamole/target/guacamole-0.0.1-SNAPSHOT.jar \
+    --guacamole-dependencies-jar \
+        ~/sinai/git/guacamole/target/guacamole-deps-only-0.0.1-SNAPSHOT.jar \
     --out-dir results
 ```
 
 ## Running on a cluster
 
 We override `TMPDIR` because the default (`/tmp`) is not mounted on our cluster nodes. The node you call the script from and the spark driver node (not the executors) must be able to share the temporary files. The driver node must also be able to write to the directory specified in `--out-dir`.
-
-Change the `--guacamole-jar` and `--guacamole-dependencies-jar` paths below for your environment.
 
 ```
 mkdir tmp
@@ -62,3 +62,4 @@ TMPDIR=$(pwd)/tmp vcb-guacamole-cluster \
         ~/sinai/git/guacamole/target/guacamole-deps-only-0.0.1-SNAPSHOT.jar \
     --out-dir results
 ```
+
