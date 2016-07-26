@@ -32,17 +32,17 @@ Note that variant calls are associated with patients, not samples. This is the "
 
 ## Running Locally
 
-Change the `--guacamole-jar` and `--guacamole-dependencies-jar` paths below for your environment.
+Change `$GUACAMOLE_HOME` here to point to your checkout of the guacamole repository.
 
 ```
+GUACAMOLE_HOME=~/sinai/git/guacamole
 vcb-guacamole-local \
     base_config.json \
     infrastructure-configs/local.json \
     guacamole-configs/default.json \
     benchmarks/local-wgs1/benchmark.json \
-    --guacamole-jar ~/sinai/git/guacamole/target/guacamole-0.0.1-SNAPSHOT.jar \
-    --guacamole-dependencies-jar \
-        ~/sinai/git/guacamole/target/guacamole-deps-only-0.0.1-SNAPSHOT.jar \
+    --guacamole-jar $GUACAMOLE_HOME/target/guacamole-0.0.1-SNAPSHOT.jar \
+    --guacamole-dependencies-jar $GUACAMOLE_HOME//target/guacamole-deps-only-0.0.1-SNAPSHOT.jar \
     --out-dir results
 ```
 
