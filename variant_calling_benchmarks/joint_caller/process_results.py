@@ -227,23 +227,23 @@ def summary_stats(config, merged):
         rows.append(("calls", name, merged[called_col].sum()))
 
         # with filters
-        rows.append(("sensitivity with filters", name) + 
+        rows.append(("recall with filters", name) + 
             stat(merged.ix[merged[called_col]].called_guacamole))
-        rows.append(("specificity with filters", name) + 
-            stat(merged.ix[merged.called_guacamole][called_col]))
+        rows.append(("precision with filters", name) + 
+            stat(merged.ix[merged[called_col]].called_guacamole))
 
         # without filters
         rows.append(
-            ("sensitivity from pooled calling only without filters", name) +
+            ("recall from pooled calling only without filters", name) +
             stat(merged.ix[merged[called_col]].trigger_SOMATIC_POOLED))
         rows.append(
-            ("sensitivity individual calling only without filters", name) +
+            ("recall individual calling only without filters", name) +
             stat(merged.ix[merged[called_col]].trigger_SOMATIC_INDIVIDUAL))
         rows.append(
-            ("specificity without filters", name) +
+            ("precision without filters", name) +
             stat(merged.ix[merged.triggered][called_col]))
         rows.append(
-            ("specificity both pooled and individual triggers firing", name) +
+            ("precision both pooled and individual triggers firing", name) +
             stat(
                 merged.ix[
                     merged.trigger_SOMATIC_INDIVIDUAL &
