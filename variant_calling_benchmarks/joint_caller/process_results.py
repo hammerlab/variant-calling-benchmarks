@@ -53,7 +53,11 @@ def merge_calls_with_others(config, guacamole_calls_df):
     merged = guacamole_calls_df
 
     for (name, info) in config['variants'].items():
-        df = pandas.read_csv(info.get_substituted('path', path=True))
+        variant_file = info.get_substituted('path', path=True)
+        if variant_file.endswith('vcf'):
+            df = varlens.variants_util.load_as_dataframe(variant_file, only_passing=False)
+        else:
+            df = pandas.read_csv(variant_file)
 
         # Since we load guacamole VCFs with varcode, the contigs will be
         # normalized, so we have to normalize them here.
