@@ -5,7 +5,7 @@
 "reference": "$HG19_FASTA",
 
 "patients": {
-    "synthetic-set-1": {
+    "syntheticset1": {
         "reads": {
             "normal blood": {
                 "analyte": "dna",
@@ -16,24 +16,10 @@
                 "analyte": "dna",
                 "tissue": "tumor",
                 "path": "$DREAM_ROOT/synthetic.challenge.set1.tumor.bam"
-            },
-        },
-    },
-    "synthetic-set-2": {
-        "reads": {
-            "normal blood": {
-                "analyte": "dna",
-                "tissue": "normal",
-                "path": "$DREAM_ROOT/synthetic.challenge.set1.normal.bam"
-            },
-            "primary": {
-                "analyte": "dna",
-                "tissue": "tumor",
-                "path": "$DREAM_ROOT/synthetic.challenge.set2.tumor.bam"
-            },
-        },
+            }
+        }
+    }
 },
-}
 
 "variants" : {
     "published": {
