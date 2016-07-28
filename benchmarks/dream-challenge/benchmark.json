@@ -7,15 +7,15 @@
 "patients": {
     "syntheticset1": {
         "reads": {
-            "normal blood": {
+            "normal_blood": {
                 "analyte": "dna",
-                "tissue": "normal",
-                "path": "$DREAM_ROOT/synthetic.challenge.set1.normal.bam"
+                "tissue_type": "normal",
+                "path": "$DREAM_ROOT/synthetic.challenge.set1.normal.v2.bam"
             },
             "primary": {
                 "analyte": "dna",
-                "tissue": "tumor",
-                "path": "$DREAM_ROOT/synthetic.challenge.set1.tumor.bam"
+                "tissue_type": "tumor",
+                "path": "$DREAM_ROOT/synthetic.challenge.set1.tumor.v2.bam"
             }
         }
     }
