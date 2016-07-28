@@ -2,19 +2,18 @@
 
 "substitutions": {
     "DREAM_ROOT": "gs://public-dream-data/",
-    "HG19_FASTA": "ucsc.hg19.fasta"
+    "B37_FASTA": "/home/arahuja/Homo_sapiens_assembly19.fasta"
 },
 
 "spark_submit_arguments": [
-    "--deploy-mode", "cluster",
+    "--deploy-mode", "client",
     "--master", "yarn",
-    "--executor-cores", "6",
-    "--executor-memory", "17g",
-    "--driver-memory", "10g",
+    "--num-executors", "45",
+    "--executor-cores", "14",
+    "--executor-memory", "20g",
+    "--driver-memory", "12g",
     "--conf", "spark.default.parallelism=10000",
-    "--conf", "spark.shuffle.service.enabled=true",
-    "--conf", "spark.executor.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -verbose:gc",
-    "--conf", "spark.driver.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -verbose:gc"
+    "--conf", "spark.shuffle.service.enabled=true"
 ]
 
 }
