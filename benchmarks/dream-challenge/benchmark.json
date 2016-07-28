@@ -2,7 +2,7 @@
 "benchmark": "dream",
 "benchmark_description": "DREAM SMC challenge",
 
-"reference": "$HG19_FASTA",
+"reference": "$B37_FASTA",
 
 "patients": {
     "syntheticset1": {
