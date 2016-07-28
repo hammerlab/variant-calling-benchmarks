@@ -7,10 +7,13 @@ import os
 
 import pandas
 import numpy
+import six
 
 import varlens
 import varlens.variants_util
 from pyensembl.locus import normalize_chromosome
+
+from ..common import load_benchmark_variants
 
 def write_merged_calls(args, config, patient_to_vcf):
     guacamole_calls = load_results(patient_to_vcf)
@@ -36,8 +39,7 @@ def write_merged_calls(args, config, patient_to_vcf):
     summary.to_csv(summary_csv, index=False)
     print("Wrote: %s" % summary_csv)
 
-join_columns = [
-    "patient",
+JOIN_COLUMNS = [
     "genome",
     "contig",
     "interbase_start",
@@ -54,15 +56,16 @@ def merge_calls_with_others(config, guacamole_calls_df):
 
     for (name, info) in config['variants'].items():
         variant_file = info.get_substituted('path', path=True)
-        if variant_file.endswith('vcf'):
-            df = varlens.variants_util.load_as_dataframe(variant_file, only_passing=False)
-        else:
-            df = pandas.read_csv(variant_file)
+        df = load_benchmark_variants(variant_file)
 
         # Since we load guacamole VCFs with varcode, the contigs will be
         # normalized, so we have to normalize them here.
         df["contig"] = df.contig.map(normalize_chromosome)
         df["called_%s" % name] = True
+        join_columns = JOIN_COLUMNS
+        if 'patient' in df.columns:
+            join_columns.append('patient')
+
         merged = pandas.merge(
             merged,
             df,
@@ -132,7 +135,7 @@ def parse_mixture_likelihoods(strings):
 
 def expand_sample_info_columns_one_row(full_row, result):
     sample_info = full_row['sample_info']
-    for (sample, info) in sample_info.iteritems():
+    for (sample, info) in six.iteritems(sample_info):
         info = dict(info)
         if 'FF' not in info:
             info['FF'] = []
@@ -145,7 +148,7 @@ def expand_sample_info_columns_one_row(full_row, result):
         info['RL_alt'] = rl_values[1] if len(rl_values) > 1 else None
         info['TRIGGERED'] = (
             info['TRIGGERED'] == 'YES' or info['TRIGGERED'] == 'EXPRESSED')
-        for (field, value) in info.iteritems():
+        for (field, value) in six.iteritems(info):
             result["%s_%s" % (sample, field)].append(value)
 
 def parse_joint_caller_fields(df):
@@ -190,7 +193,7 @@ def parse_joint_caller_fields(df):
             new_columns["trigger_%s" % trigger].append(
                 trigger in triggers_present)
 
-        for (column, lst) in new_columns.iteritems():
+        for (column, lst) in six.iteritems(new_columns):
             if len(lst) != i + 1:
                 raise ValueError(
                     "Info\n%s\nfor row %d\n%s\ndid not add to column %s" % (

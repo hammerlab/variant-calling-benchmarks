@@ -1,4 +1,5 @@
 import pandas
+import varlens
 
 def extract_loci_string(patient, variant_filenames):
     '''
@@ -19,8 +20,9 @@ def extract_loci_string(patient, variant_filenames):
     '''
     loci = []
     for filename in variant_filenames:
-        df = pandas.read_csv(filename)
-        df = df.ix[df.patient == patient]
+        df = load_benchmark_variants(filename)
+        if 'patient' in df.columns:
+            df = df.ix[df.patient == patient]
         for (i, row) in df.iterrows():
             loci.append("%s:%d-%d" % (
                 row["contig"], row["interbase_start"], row["interbase_end"]))
@@ -40,3 +42,10 @@ def add_common_run_args(parser):
         help="Don't delete temporary files.")
     parser.add_argument("--skip-guacamole", action="store_true", default=False,
         help="Don't actually run guacamole")
+
+def load_benchmark_variants(variant_file):
+    if variant_file.endswith('vcf'):
+        df = varlens.variants_util.load_as_dataframe(variant_file, only_passing=False)
+    else:
+        df = pandas.read_csv(variant_file)
+    return df
