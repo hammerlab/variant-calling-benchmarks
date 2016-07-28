@@ -12,6 +12,7 @@ def tempfile_path(prefix='', suffix='.data', contents=''):
     fd = tempfile.NamedTemporaryFile(
             prefix='tmp_variant_calling_benchmarks_' + prefix,
             suffix=suffix,
+            mode='w',
             delete=False)
     fd.write(contents)
     fd.close()
