@@ -62,7 +62,7 @@ def merge_calls_with_others(config, guacamole_calls_df):
         # normalized, so we have to normalize them here.
         df["contig"] = df.contig.map(normalize_chromosome)
         df["called_%s" % name] = True
-        join_columns = JOIN_COLUMNS
+        join_columns = list(JOIN_COLUMNS)
         if 'patient' in df.columns:
             join_columns.append('patient')
 
