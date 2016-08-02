@@ -6,6 +6,27 @@ import functools
 import pprint
 
 def substitute(value, variables, raise_on_keyerror=True):
+    """
+    Interpolate a string like "Hello $NAME" in the context of the given
+    variables (like: {"NAME": "John"}.
+
+    The substition values may themselves have substitutions. The interpolation
+    is run repeatedly until a fixed point is reached.
+
+    Parameters
+    -----------
+    value : string
+        The string to be substituted
+
+    variables : dict
+        The variables to substitute
+
+    raise_on_keyerror : boolean
+        If True, a KeyError is raised if a substitution is not found in
+        variables. If False, the substitution is left in the string and no
+        error is raised.
+
+    """
     result = None
     original = value
     i = 0
@@ -26,6 +47,10 @@ def substitute(value, variables, raise_on_keyerror=True):
     return result
 
 def recursive_substitute(node, variables, raise_on_keyerror=True):
+    """
+    Substitute strings recursively in a data structure of dicts, lists, and
+    strings.
+    """
     return recursive_map(
         node, functools.partial(
             substitute,
@@ -33,6 +58,10 @@ def recursive_substitute(node, variables, raise_on_keyerror=True):
             variables=variables))
 
 def recursive_map(node, function):
+    """
+    Run the given function on strings in a data structure of dicts, lists,
+    and strings, and return the result.
+    """
     if isinstance(node, dict):
         return dict(
             (key, recursive_map(value, function))
@@ -55,6 +84,9 @@ def load_config(*filenames):
         try:
             with open(filename) as fd:
                 d = json.load(fd)
+
+                # We substitute the special THIS_DIR substitution immediately,
+                # since its value depends on the filename.
                 d = recursive_substitute(d, {
                     'THIS_DIR': os.path.dirname(filename)
                 }, raise_on_keyerror=False)

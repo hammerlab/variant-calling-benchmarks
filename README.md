@@ -18,7 +18,7 @@ Also checkout and build guacamole.
 
 The benchmark defintions and guacamole configurations are given in JSON. They are split into multiple files for clarity but the 'configuration' is just the union of all the files passed. The code doesn't care what the files are or which file has a particular property.
 
-Paths in config files are relative to the directory of the config file. A simple substitution mechanism is supported where strings like "foo-${NAME}" will have $NAME expanded according to substitutions defined in the config files (under the 'substitutions' keys).
+A simple substitution mechanism is supported where strings like "foo-${NAME}" will have $NAME expanded according to substitutions defined in the config files (under the 'substitutions' keys). The special substitution `THIS_DIR` is the directory the JSON file is found in.
 
 ## Benchmark definition
 
