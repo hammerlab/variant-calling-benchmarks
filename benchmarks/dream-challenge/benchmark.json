@@ -24,7 +24,7 @@
 "variants" : {
     "published": {
         "kind": "somatic",
-        "path": "synthetic.challenge.set1.tumor.all.truth.vcf"
+        "path": "$THIS_DIR/synthetic.challenge.set1.tumor.all.truth.vcf"
     }
 }
 
