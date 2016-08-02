@@ -63,3 +63,12 @@ TMPDIR=$(pwd)/tmp vcb-guacamole-cluster \
     --out-dir results
 ```
 
+## Submitting results to google cloud storage
+
+We're using Google Cloud Storage to store benchmark results. First, install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/).
+
+After you've run a benchmark you can copy the results to GCS with a command like:
+
+```
+gsutil rsync -d results gs://variant-calling-benchmarks-results/tim-$(date +"%m-%d-%y")
+```
