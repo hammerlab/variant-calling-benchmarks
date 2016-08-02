@@ -17,8 +17,7 @@
     "--deploy-mode", "cluster",
     "--master", "yarn",
     "--executor-cores", "6",
-    "--executor-memory", "17g",
-    "--driver-memory", "10g",
+    "--driver-memory", "30g",
 
     "--conf", "spark.driver.maxResultSize=0",
     "--conf", "spark.yarn.executor.memoryOverhead=6000",
@@ -26,7 +25,6 @@
     "--conf", "spark.default.parallelism=10000",
     "--conf", "spark.eventLog.enabled=true",
     "--conf", "spark.eventLog.dir=hdfs://demeter-nn1.demeter.hpc.mssm.edu:/user/spark/applicationHistory",
-    "--conf", "spark.storage.memoryFraction=0.1",
     "--conf", "spark.shuffle.service.enabled=true",
     "--conf", "spark.speculation=true",
     "--conf", "spark.speculation.interval=1000",
