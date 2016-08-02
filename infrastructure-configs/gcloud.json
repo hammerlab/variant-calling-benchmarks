@@ -1,0 +1,19 @@
+{
+
+"substitutions": {
+    "DREAM_ROOT": "gs://public-dream-data/",
+    "B37_FASTA": "/home/arahuja/Homo_sapiens_assembly19.fasta"
+},
+
+"spark_submit_arguments": [
+    "--deploy-mode", "client",
+    "--master", "yarn",
+    "--num-executors", "45",
+    "--executor-cores", "14",
+    "--executor-memory", "20g",
+    "--driver-memory", "12g",
+    "--conf", "spark.default.parallelism=10000",
+    "--conf", "spark.shuffle.service.enabled=true"
+]
+
+}

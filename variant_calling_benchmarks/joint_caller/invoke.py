@@ -71,3 +71,4 @@ def make_arguments(config, patient, out_vcf):
     arguments.extend(["--out", out_vcf])
 
     return arguments
+
