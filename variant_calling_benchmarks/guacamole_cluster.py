@@ -16,8 +16,6 @@ from .joint_caller import process_results
 
 parser = argparse.ArgumentParser(description=__doc__)
 common.add_common_run_args(parser)
-parser.add_argument("--spark-submit", default="spark-submit",
-    help="Path to spark-submit script")
 
 def run(argv=sys.argv[1:]):
     args = parser.parse_args(argv)
@@ -32,6 +30,9 @@ def main(args, config):
 
     patient_to_vcf = {}
 
+    environment_variables = dict(os.environ)
+    environment_variables.update(config.get("environment_variables", {}))
+
     for patient in patients:
         out_vcf = os.path.join(
             os.path.abspath(args.out_dir),
@@ -41,7 +42,7 @@ def main(args, config):
             patient, out_vcf))
 
         invocation = (
-            [args.spark_submit] +
+            [config["spark_submit"]] +
             config["spark_submit_arguments"] + 
             ["--jars", args.guacamole_dependencies_jar] +
             ["--class", "org.hammerlab.guacamole.Main", args.guacamole_jar] +
@@ -53,6 +54,6 @@ def main(args, config):
         else:
             logging.info("Running guacamole with arguments %s" % str(
                 invocation))
-            subprocess.check_call(invocation)
+            subprocess.check_call(invocation, env=environment_variables)
 
     process_results.write_merged_calls(args, config, patient_to_vcf)

@@ -2,95 +2,104 @@ import os
 import logging
 import string
 import json
+import functools
+import pprint
 
-from six.moves.urllib.parse import urlparse
+def substitute(value, variables, raise_on_keyerror=True):
+    """
+    Interpolate a string like "Hello $NAME" in the context of the given
+    variables (like: {"NAME": "John"}.
+
+    The substition values may themselves have substitutions. The interpolation
+    is run repeatedly until a fixed point is reached.
+
+    Parameters
+    -----------
+    value : string
+        The string to be substituted
+
+    variables : dict
+        The variables to substitute
+
+    raise_on_keyerror : boolean
+        If True, a KeyError is raised if a substitution is not found in
+        variables. If False, the substitution is left in the string and no
+        error is raised.
+
+    """
+    result = None
+    original = value
+    i = 0
+    while True:
+        template = string.Template(original)
+        if raise_on_keyerror:
+            result = template.substitute(**variables)
+        else:
+            result = template.safe_substitute(**variables)
+        if result == original:
+            # No changes.
+            break
+        original = result
+        if i > 100:
+            raise RuntimeError(
+                "Substitution not terminating: %s" % value)
+        i += 1
+    return result
+
+def recursive_substitute(node, variables, raise_on_keyerror=True):
+    """
+    Substitute strings recursively in a data structure of dicts, lists, and
+    strings.
+    """
+    return recursive_map(
+        node, functools.partial(
+            substitute,
+            raise_on_keyerror=raise_on_keyerror,
+            variables=variables))
+
+def recursive_map(node, function):
+    """
+    Run the given function on strings in a data structure of dicts, lists,
+    and strings, and return the result.
+    """
+    if isinstance(node, dict):
+        return dict(
+            (key, recursive_map(value, function))
+            for (key, value) in node.items())
+    if isinstance(node, list):
+        return [recursive_map(value, function) for value in node]
+    return function(node)
 
 def load_config(*filenames):
     '''
-    Load the specified JSON config files.
+    Load, merge, and interpolate the specified JSON config files.
 
     Returns
     ---------
-    MergedConfigDicts
+    dict
     '''
-    dicts = []
     substitutions = {}
+    merged = {}
     for filename in filenames:
         try:
-            def object_hook(dictionary):
-                return ConfigDict(filename, substitutions, dictionary)
-
             with open(filename) as fd:
-                d = json.load(fd, object_hook=object_hook)
+                d = json.load(fd)
+
+                # We substitute the special THIS_DIR substitution immediately,
+                # since its value depends on the filename.
+                d = recursive_substitute(d, {
+                    'THIS_DIR': os.path.dirname(filename)
+                }, raise_on_keyerror=False)
                 substitutions.update(d.get("substitutions", {}))
-                dicts.append(d)
+                merged.update(d)
         except Exception as e:
             logging.warn(
                 "Error loading config %s: %s" % (filename, str(e)))
             raise
 
-    return MergedConfigDicts(dicts)
+    substituted = recursive_substitute(merged, substitutions)
+    logging.info("Loaded config from files %s:\n%s" % (
+        " ".join(filenames),
+        pprint.pformat(substituted)))
 
-class MergedConfigDicts(dict):
-    '''
-
-    '''
-    def __init__(self, dicts):
-        self.key_to_dict = {}
-        for d in dicts:
-            self.update(d)
-            for key in d.keys():
-                self.key_to_dict[key] = d
-
-    def get_substituted(self, key, path=False):
-        return self.key_to_dict[key].get_substituted(key, path=path)
-
-class ConfigDict(dict):
-    '''
-    Thin wrapper over a dict that adds the get_substituted method.
-    '''
-    def __init__(self, filename, substitutions, dictionary):
-        '''
-        Parameters
-        -------------
-        filename : string
-            File this dict was loaded from.
-
-        substitutions : dict
-            String substitutions that should be used when get_substituted
-            is called.
-
-        dictionary : dict
-            The dictionary to be wrapped.
-        '''
-        self.filename = filename
-        self.substitutions = substitutions
-        self.basedir = os.path.dirname(self.filename)
-        self.update(dictionary)
-
-    def get_substituted(self, key, path=False):
-        '''
-        Return the specified key from the dict after running string
-        substitutions.
-
-        Parameters
-        -------------
-        path : boolean
-            If True, then after template expansion on the value, it will
-            additionally be treated as a path. If it is relative (does not
-            start with /) then the directory of the JSON file the Config was
-            loaded from will be preprended to it.
-
-        Returns
-        -------------
-        string, number, list, or ConfigDict giving the requested value
-
-        '''
-        value = self[key]
-        result = string.Template(value).substitute(**self.substitutions)
-
-        # If it's an absolute path or a URL, we don't want to change it.
-        if path and not (result.startswith("/") or urlparse(result).scheme):
-            result = os.path.join(self.basedir, result)
-        return result
-
+    return substituted

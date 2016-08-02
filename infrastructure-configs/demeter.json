@@ -2,15 +2,22 @@
 
 "substitutions": {
     "AOCS_HDFS_BAMS": "hdfs:///datasets/ovarian/ega-tim",
-    "HG19_FASTA": "/hpc/users/ahujaa01/reference_genomes/hg19-reference/ucsc.hg19.fasta"
+    "HG19_FASTA": "/hpc/users/ahujaa01/reference_genomes/hg19-reference/ucsc.hg19.fasta",
+    "SPARK_HOME": "/hpc/users/willir31/sparks/spark-1.6.1-bin-hadoop2.6"
 },
+
+"environment_variables": {
+    "SPARK_HOME": "$SPARK_HOME",
+    "YARN_CONF_DIR": "/etc/hadoop/conf"
+},
+
+"spark_submit": "$SPARK_HOME/bin/spark-submit",
 
 "spark_submit_arguments": [
     "--deploy-mode", "cluster",
     "--master", "yarn",
     "--executor-cores", "6",
-    "--executor-memory", "17g",
-    "--driver-memory", "10g",
+    "--driver-memory", "30g",
 
     "--conf", "spark.driver.maxResultSize=0",
     "--conf", "spark.yarn.executor.memoryOverhead=6000",
@@ -18,7 +25,6 @@
     "--conf", "spark.default.parallelism=10000",
     "--conf", "spark.eventLog.enabled=true",
     "--conf", "spark.eventLog.dir=hdfs://demeter-nn1.demeter.hpc.mssm.edu:/user/spark/applicationHistory",
-    "--conf", "spark.storage.memoryFraction=0.1",
     "--conf", "spark.shuffle.service.enabled=true",
     "--conf", "spark.speculation=true",
     "--conf", "spark.speculation.interval=1000",
