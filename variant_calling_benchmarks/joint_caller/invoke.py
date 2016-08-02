@@ -28,7 +28,7 @@ def make_arguments(config, patient, out_vcf):
     only_somatic = all(
         x['kind'] == 'somatic' for x in config['variants'].values())
     force_call_loci_string = extract_loci_string(patient, [
-        x.get_substituted('path', path=True)
+        x['path']
         for x in config['variants'].values()
     ])
 
@@ -39,7 +39,7 @@ def make_arguments(config, patient, out_vcf):
 
     arguments = ["somatic-joint"]
     arguments.extend(
-        x.get_substituted('path', path=True) for x in reads.values())
+        x['path'] for x in reads.values())
     arguments.extend(
         ["--tissue-types"] + [x['tissue_type'] for x in reads.values()])
     arguments.extend(
@@ -53,13 +53,12 @@ def make_arguments(config, patient, out_vcf):
 
     if 'loci' in patient_dict:
         arguments.append("--loci")
-        arguments.append(patient_dict.get_substituted('loci'))
+        arguments.append(patient_dict['loci'])
 
     arguments.extend([
         "--force-call-loci-file",
         "file://" + os.path.abspath(force_call_loci_path)])
-    arguments.extend(
-        ["--reference-fasta", config.get_substituted("reference", path=True)])
+    arguments.extend(["--reference-fasta", config["reference"]])
     if config.get("reference_fasta_is_partial", "false") == "true":
         arguments.append("--reference-fasta-is-partial")
     arguments.extend(config.get("guacamole_arguments", []))

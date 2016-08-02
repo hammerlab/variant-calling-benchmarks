@@ -31,8 +31,7 @@ def main(args, config):
     patient_to_vcf = {}
 
     environment_variables = dict(os.environ)
-    for key in config.get("environment_variables", {}):
-        environment_variables[key] = config.get_substituted(key)
+    environment_variables.update(config.get("environment_variables", {}))
 
     for patient in patients:
         out_vcf = os.path.join(
@@ -43,7 +42,7 @@ def main(args, config):
             patient, out_vcf))
 
         invocation = (
-            [config.get_substituted("spark_submit", path=True)] +
+            [config["spark_submit"]] +
             config["spark_submit_arguments"] + 
             ["--jars", args.guacamole_dependencies_jar] +
             ["--class", "org.hammerlab.guacamole.Main", args.guacamole_jar] +

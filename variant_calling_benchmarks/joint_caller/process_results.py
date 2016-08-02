@@ -55,7 +55,7 @@ def merge_calls_with_others(config, guacamole_calls_df):
     merged = guacamole_calls_df
 
     for (name, info) in config['variants'].items():
-        variant_file = info.get_substituted('path', path=True)
+        variant_file = info['path']
         df = load_benchmark_variants(variant_file)
 
         # Since we load guacamole VCFs with varcode, the contigs will be

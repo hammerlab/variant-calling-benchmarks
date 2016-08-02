@@ -30,7 +30,7 @@
 "variants": {
     "published": {
         "kind": "somatic",
-        "path": "aocs_published_calls.csv"
+        "path": "$THIS_DIR/aocs_published_calls.csv"
     }
 }
 
