@@ -20,7 +20,7 @@
     "--driver-memory", "30g",
 
     "--conf", "spark.driver.maxResultSize=0",
-    "--conf", "spark.yarn.driver.memoryOverhead=5gb",
+    "--conf", "spark.yarn.driver.memoryOverhead=5g",
     "--conf", "spark.yarn.executor.memoryOverhead=6000",
     "--conf", "spark.executor.memory=16g",
     "--conf", "spark.default.parallelism=10000",
