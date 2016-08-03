@@ -20,9 +20,9 @@
     "--driver-memory", "30g",
 
     "--conf", "spark.driver.maxResultSize=0",
-    "--conf", "spark.yarn.driver.memoryOverhead=5g",
-    "--conf", "spark.yarn.executor.memoryOverhead=6000",
-    "--conf", "spark.executor.memory=16g",
+    "--conf", "spark.yarn.driver.memoryOverhead=5000",
+    "--conf", "spark.yarn.executor.memoryOverhead=5000",
+    "--conf", "spark.executor.memory=10g",
     "--conf", "spark.default.parallelism=10000",
     "--conf", "spark.eventLog.enabled=true",
     "--conf", "spark.eventLog.dir=hdfs://demeter-nn1.demeter.hpc.mssm.edu:/user/spark/applicationHistory",
