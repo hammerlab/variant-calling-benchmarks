@@ -38,6 +38,6 @@ setup(
         "pyensembl",
         "nose>=1.3.1",
         "typechecks>=0.0.2",
-        "pandas>=0.16.1",
+        "pandas>=0.18.1",
     ]
 )

@@ -1,3 +1,6 @@
+import subprocess
+import logging
+
 import pandas
 import varlens
 
@@ -45,7 +48,25 @@ def add_common_run_args(parser):
 
 def load_benchmark_variants(variant_file):
     if variant_file.endswith('vcf'):
-        df = varlens.variants_util.load_as_dataframe(variant_file, only_passing=False)
+        df = varlens.variants_util.load_as_dataframe(
+            variant_file, only_passing=False)
     else:
         df = pandas.read_csv(variant_file)
     return df
+
+def compress_file(filename, method='gzip', dry_run=False):
+    """
+    Compress the given file using gzip or bzip2 and return the path to the
+    compressed file. If dry_run=True, do nothing.
+    """
+    method_to_extension = {
+        'bzip2': 'bz2',
+        'gzip': 'gz',
+    }
+    if method not in method_to_extension:
+        raise ValueError("Unknown method: %s" % method)
+    if not dry_run:
+        logging.info("%s compressing: %s" % (method, filename))
+        subprocess.check_call([method, filename])
+    return "%s.%s" % (filename, method_to_extension[method])
+

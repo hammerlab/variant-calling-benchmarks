@@ -35,7 +35,6 @@ def main(args, config):
         out_vcf = os.path.join(
             args.out_dir,
             "out.%s.%s.vcf" % (config['benchmark'], patient))
-        patient_to_vcf[patient] = out_vcf
         logging.info("Running on patient %s outputting to %s" % (
             patient, out_vcf))
 
@@ -52,9 +51,13 @@ def main(args, config):
         if args.skip_guacamole:
             logging.info("Skipping guacamole run with arguments %s" % str(
                 invocation))
+            result_vcf = common.compress_file(out_vcf, dry_run=True)
         else:
             logging.info("Running guacamole with arguments %s" % str(
                 invocation))
             subprocess.check_call(invocation)
+            result_vcf = common.compress_file(out_vcf)
+
+        patient_to_vcf[patient] = result_vcf
 
     process_results.write_merged_calls(args, config, patient_to_vcf)

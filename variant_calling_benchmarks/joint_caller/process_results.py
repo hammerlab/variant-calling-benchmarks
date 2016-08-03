@@ -19,20 +19,19 @@ def write_merged_calls(args, config, patient_to_vcf):
     guacamole_calls = load_results(patient_to_vcf)
     guacamole_calls_csv = os.path.join(
             args.out_dir,
-            "guacamole_calls.%s.csv" % (config['benchmark']))
-    guacamole_calls.to_csv(guacamole_calls_csv, index=False)
+            "guacamole_calls.%s.csv.gz" % (config['benchmark']))
+    guacamole_calls.to_csv(
+        guacamole_calls_csv, index=False, compression="gzip")
     print("Wrote: %s" % guacamole_calls_csv)
 
-    merged_calls = merge_calls_with_others(
-        config, guacamole_calls)
+    merged_calls = merge_calls_with_others(config, guacamole_calls)
     merged_calls_csv = os.path.join(
             args.out_dir,
-            "merged_calls.%s.csv" % (config['benchmark']))
-    merged_calls.to_csv(merged_calls_csv, index=False)
+            "merged_calls.%s.csv.gz" % (config['benchmark']))
+    merged_calls.to_csv(merged_calls_csv, index=False, compression="gzip")
     print("Wrote: %s" % merged_calls_csv)
 
-    summary = summary_stats(
-        config, merged_calls)
+    summary = summary_stats(config, merged_calls)
     summary_csv = os.path.join(
             args.out_dir,
             "summary.%s.csv" % (config['benchmark']))
