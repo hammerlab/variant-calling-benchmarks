@@ -60,7 +60,7 @@ def write_results(args, config, patient_to_vcf, extra={}):
         ('host', socket.gethostname()),
         ("cwd", os.getcwd()),
         ('time', time.asctime()),
-        ('out_dir', args.out_dir),
+        ('out_dir', os.path.abspath(args.out_dir)),
         ('merged_calls_hash', merged_calls_hash),
         ('merged_calls_filename', merged_calls_filename),
         ('guacamole_calls_filename', guacamole_calls_filename),
@@ -149,10 +149,13 @@ def load_results(patient_to_vcf_paths):
     '''
     dfs = []
     for (patient, vcf_path) in patient_to_vcf_paths.items():
+        logging.info("Loading VCF: %s" % vcf_path)
         calls = varlens.variants_util.load_as_dataframe(
             vcf_path, only_passing=False)
+        logging.info("Done. Now parsing joint caller fields.")
         calls["patient"] = patient
         dfs.append(parse_joint_caller_fields(calls))
+        logging.info("Done.")
     return pandas.concat(dfs, ignore_index=True)
 
 def yes_no_to_bool(value):
