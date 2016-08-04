@@ -1,5 +1,7 @@
 import subprocess
 import logging
+import os
+import collections
 
 import pandas
 import varlens
@@ -39,7 +41,10 @@ def add_common_run_args(parser):
         help="Path to guacamole-deps-only-VERSION.jar")
     parser.add_argument("--patient", nargs="+",
         help="One or more patients to run. Default: all patients are run.")
+    
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--out-bucket")
+
     parser.add_argument("--keep-temp-files", action="store_true",
         default=False,
         help="Don't delete temporary files.")
@@ -67,6 +72,32 @@ def compress_file(filename, method='gzip', dry_run=False):
         raise ValueError("Unknown method: %s" % method)
     if not dry_run:
         logging.info("%s compressing: %s" % (method, filename))
-        subprocess.check_call([method, filename])
+        subprocess.check_call([method, "-n", "-f", filename])
     return "%s.%s" % (filename, method_to_extension[method])
 
+def git_info_for_guacamole_jar(jar_path):
+    result = collections.OrderedDict()
+    target_dir = os.path.dirname(jar_path)
+    error = None
+    if target_dir.endswith('target'):
+        guacamole_dir = os.path.dirname(target_dir)
+        logging.info("Inferred guacamole repository dir: %s" % guacamole_dir)
+        try:
+            result["repository_path"] = guacamole_dir
+            result["status"] = subprocess.check_output(["git", "status"],
+                cwd=guacamole_dir).strip()
+            result["commit"] = subprocess.check_output(
+                ["git", "log", "-1", "--format='%H'"],
+                cwd=guacamole_dir).strip()
+            result["diff"] = subprocess.check_output(
+                ["git", "diff"], cwd=guacamole_dir).strip()
+        except Exception as e:
+            error = str(e)
+    else:
+        error = "not a repository?"
+
+    if error is not None:
+        logging.warn("Failed to check git status for repository: %s: %s" %
+            (guacamole_dir, error))
+
+    return result

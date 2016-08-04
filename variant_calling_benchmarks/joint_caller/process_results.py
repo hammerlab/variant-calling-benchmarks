@@ -4,6 +4,12 @@ Utilities for parsing the results of the guacamole joint caller.
 
 import collections
 import os
+import getpass
+import socket
+import hashlib
+import time
+import json
+import logging
 
 import pandas
 import numpy
@@ -13,30 +19,81 @@ import varlens
 import varlens.variants_util
 from pyensembl.locus import normalize_chromosome
 
-from ..common import load_benchmark_variants
+from ..common import load_benchmark_variants, git_info_for_guacamole_jar
+from .. import cloud_util
 
-def write_merged_calls(args, config, patient_to_vcf):
+def sha1_hash(s, num_digits=16):
+    return hashlib.sha1(s).hexdigest()[:num_digits]
+
+def write_results(args, config, patient_to_vcf, extra={}):
     guacamole_calls = load_results(patient_to_vcf)
-    guacamole_calls_csv = os.path.join(
-            args.out_dir,
-            "guacamole_calls.%s.csv.gz" % (config['benchmark']))
-    guacamole_calls.to_csv(
-        guacamole_calls_csv, index=False, compression="gzip")
-    print("Wrote: %s" % guacamole_calls_csv)
 
     merged_calls = merge_calls_with_others(config, guacamole_calls)
-    merged_calls_csv = os.path.join(
-            args.out_dir,
-            "merged_calls.%s.csv.gz" % (config['benchmark']))
-    merged_calls.to_csv(merged_calls_csv, index=False, compression="gzip")
-    print("Wrote: %s" % merged_calls_csv)
+    merged_calls_hash = sha1_hash(
+        merged_calls.to_csv(None, index=False))
+    logging.info("Merged calls hash: %s" % merged_calls_hash)
 
+    guacamole_calls_filename = "guacamole_calls.%s.%s.csv.gz" % (
+            config['benchmark'], merged_calls_hash)
+    guacamole_calls_csv = os.path.join(
+            args.out_dir, guacamole_calls_filename)
+    guacamole_calls.to_csv(
+        guacamole_calls_csv, index=False, compression="gzip")
+    logging.info("Wrote: %s" % guacamole_calls_csv)
+
+    merged_calls_filename = "merged_calls.%s.%s.csv.gz" % (
+            config['benchmark'], merged_calls_hash)
+    merged_calls_csv = os.path.join(
+            args.out_dir, merged_calls_filename)
+    merged_calls.to_csv(merged_calls_csv, index=False, compression="gzip")
+    logging.info("Wrote: %s" % merged_calls_csv)
+
+    summary_filename = "summary.%s.%s.csv" % (
+        config['benchmark'], merged_calls_hash)
     summary = summary_stats(config, merged_calls)
-    summary_csv = os.path.join(
-            args.out_dir,
-            "summary.%s.csv" % (config['benchmark']))
+    summary_csv = os.path.join(args.out_dir, summary_filename)
     summary.to_csv(summary_csv, index=False)
-    print("Wrote: %s" % summary_csv)
+    logging.info("Wrote: %s" % summary_csv)
+
+    manifest = collections.OrderedDict([
+        ('user', getpass.getuser()),
+        ('host', socket.gethostname()),
+        ("cwd", os.getcwd()),
+        ('time', time.asctime()),
+        ('out_dir', args.out_dir),
+        ('merged_calls_hash', merged_calls_hash),
+        ('merged_calls_filename', merged_calls_filename),
+        ('guacamole_calls_filename', guacamole_calls_filename),
+        ('guacamole_git_info', git_info_for_guacamole_jar(args.guacamole_jar)),
+        ('arguments', {
+            'args': args._get_args(),
+            'kwargs': args._get_kwargs(),
+        }),
+        ('config', config),
+        ('extra', extra),
+    ])
+    manifest_json_dump = json.dumps(manifest, indent=2)
+    manifest_hash = sha1_hash(manifest_json_dump)
+    logging.info("Manifest hash: %s" % manifest_hash)
+    manifest_json = os.path.join(
+        args.out_dir,
+        "manifest.%s.%s.%s.json" % (
+            config['benchmark'], manifest_hash, merged_calls_hash))
+
+    with open(manifest_json, "w") as fd:
+        fd.write(manifest_json_dump)
+    logging.info("Wrote: %s" % manifest_json)
+
+    if args.out_bucket:
+        cloud_util.copy_to_google_storage_bucket(
+            merged_calls_csv,
+            args.out_bucket,
+            no_clobber=True)
+        cloud_util.copy_to_google_storage_bucket(
+            manifest_json,
+            args.out_bucket,
+            no_clobber=True)
+    return manifest
 
 JOIN_COLUMNS = [
     "genome",
@@ -84,7 +141,6 @@ def merge_calls_with_others(config, guacamole_calls_df):
         if c in merged:
             merged[c] = merged[c].fillna(False).astype(bool)
     return merged
-
 
 def load_results(patient_to_vcf_paths):
     '''

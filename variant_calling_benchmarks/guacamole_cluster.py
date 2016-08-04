@@ -7,6 +7,7 @@ import os
 import argparse
 import subprocess
 import logging
+import time
 
 from .config import load_config
 from . import temp_files
@@ -32,6 +33,7 @@ def main(args, config):
 
     environment_variables = dict(os.environ)
     environment_variables.update(config.get("environment_variables", {}))
+    elapsed = {}
 
     for patient in patients:
         out_vcf = os.path.join(
@@ -55,9 +57,16 @@ def main(args, config):
         else:
             logging.info("Running guacamole with arguments %s" % str(
                 invocation))
+            start = time.time()
             subprocess.check_call(invocation, env=environment_variables)
+            elapsed[patient] = time.time() - start
+            logging.info("Ran in %0.1f seconds." % elapsed[patient])
             result_vcf = common.compress_file(out_vcf)
 
         patient_to_vcf[patient] = result_vcf
-
-    process_results.write_merged_calls(args, config, patient_to_vcf)
+    
+    extra = {
+        'guacamole_elapsed_seconds': elapsed,
+        'environment_variables': environment_variables,
+    }
+    process_results.write_results(args, config, patient_to_vcf, extra=extra)

@@ -43,8 +43,11 @@ vcb-guacamole-local \
     benchmarks/local-wgs1/benchmark.json \
     --guacamole-jar $GUACAMOLE_HOME/target/guacamole-0.0.1-SNAPSHOT.jar \
     --guacamole-dependencies-jar $GUACAMOLE_HOME/target/guacamole-deps-only-0.0.1-SNAPSHOT.jar \
-    --out-dir results
+    --out-dir results \
+    --out-bucket gs://variant-calling-benchmarks-results
 ```
+
+If you do not want to submit your run to our google cloud storage bucket, omit the `--out-bucket` argument.
 
 ## Running on a cluster
 
@@ -60,18 +63,18 @@ TMPDIR=$(pwd)/tmp vcb-guacamole-cluster \
     benchmarks/aocs/benchmark.json \
     --guacamole-jar $GUACAMOLE_HOME/target/guacamole-0.0.1-SNAPSHOT.jar \
     --guacamole-dependencies-jar $GUACAMOLE_HOME/target/guacamole-deps-only-0.0.1-SNAPSHOT.jar \
-    --out-dir results
+    --out-dir results \
+    --out-bucket gs://variant-calling-benchmarks-results
+
 ```
 
 ## Submitting results to google cloud storage (Hammer Lab users only)
 
 We're using Google Cloud Storage to store benchmark results. First, install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/) and login.
 
-After you've run a benchmark you can copy the results to GCS with a command like:
+You can have results submitted to the cloud bucket by specifying `--out-bucket gs://variant-calling-benchmarks-results` when you run the benchmark. The merged csv of results is written to the bucket using a filename based on its sha1 hash, so repeated runs that result in the same results do not incur storage or transfer costs. The manifest JSON file, which is different for every run but is tiny, is also uploaded.
 
-```
-gsutil rsync -d results gs://variant-calling-benchmarks-results/tim-$(date +"%m-%d-%y")
-```
+You can see submitted benchmark results [here](https://console.cloud.google.com/storage/browser/variant-calling-benchmarks-results/).
 
 You can also pull down all submitted benchmarks to your local machine with a command like:
 
