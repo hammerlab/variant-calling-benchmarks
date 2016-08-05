@@ -10,6 +10,7 @@ import hashlib
 import time
 import json
 import logging
+import gzip
 
 import pandas
 import numpy
@@ -20,7 +21,10 @@ import varlens
 import varlens.variants_util
 from pyensembl.locus import normalize_chromosome
 
-from ..common import load_benchmark_variants, git_info_for_guacamole_jar
+from ..common import (
+    load_benchmark_variants,
+    git_info_for_guacamole_jar,
+    df_to_csv_json_encode_objects)
 from .. import cloud_util, analysis
 
 def sha1_hash(s, num_digits=16):
@@ -31,16 +35,28 @@ def write_results(args, config, patient_to_vcf, extra={}):
     vcf_metadata = load_result_vcf_header_metadata(patient_to_vcf)
 
     merged_calls = merge_calls_with_others(config, guacamole_calls)
-    merged_calls_hash = sha1_hash(
-        merged_calls.to_csv(None, index=False))
+
+    # Clean up merged_calls
+    del merged_calls["variant"]
+    merged_calls["alt"] = merged_calls["alt"].fillna("")
+    merged_calls["ref"] = merged_calls["ref"].fillna("")
+    merged_calls["snv"] = (
+        (merged_calls.ref.str.len() == 1) &
+        (merged_calls.alt.str.len() == 1))
+    del merged_calls["sample_info"]
+
+    merged_calls_csv_data = df_to_csv_json_encode_objects(merged_calls)
+    merged_calls_hash = sha1_hash(merged_calls_csv_data)
     logging.info("Merged calls hash: %s" % merged_calls_hash)
 
     merged_calls_filename = "merged_calls.%s.%s.csv.gz" % (
             config['benchmark'], merged_calls_hash)
-    merged_calls_csv = os.path.join(
+    merged_calls_csv_path = os.path.join(
             args.out_dir, merged_calls_filename)
-    merged_calls.to_csv(merged_calls_csv, index=False, compression="gzip")
-    logging.info("Wrote: %s" % merged_calls_csv)
+    with gzip.open(merged_calls_csv_path, "wb") as fd:
+        fd.write(merged_calls_csv_data)
+    del merged_calls_csv_data
+    logging.info("Wrote: %s" % merged_calls_csv_path)
 
     accuracy = analysis.accuracy_summary(merged_calls)
 
@@ -76,7 +92,7 @@ def write_results(args, config, patient_to_vcf, extra={}):
 
     if args.out_bucket:
         cloud_util.copy_to_google_storage_bucket(
-            merged_calls_csv,
+            merged_calls_csv_path,
             args.out_bucket,
             no_clobber=True)
         cloud_util.copy_to_google_storage_bucket(
@@ -151,8 +167,9 @@ def load_results(patient_to_vcf_paths):
         logging.info("Loading VCF: %s" % vcf_path)
         calls = varlens.variants_util.load_as_dataframe(
             vcf_path, only_passing=False)
-        logging.info("Done. Now parsing joint caller fields.")
         calls["patient"] = patient
+
+        logging.info("Done. Now parsing joint caller fields.")
         dfs.append(parse_joint_caller_fields(calls))
         logging.info("Done.")
     return pandas.concat(dfs, ignore_index=True)
@@ -195,7 +212,7 @@ def parse_mixture_likelihoods(strings):
             parsed_mixture = tuple(parsed_mixture)
             if not pandas.isnull(total_vaf):
                 numpy.testing.assert_almost_equal(total_vaf, 1.0, decimal=1)
-        result[parsed_mixture] = value
+        result[str(parsed_mixture)] = value
     return result
 
 def expand_sample_info_columns_one_row(full_row, result):

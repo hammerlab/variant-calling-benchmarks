@@ -10,6 +10,8 @@ import numpy
 import pandas
 import requests
 
+from . import common
+
 def load_benchmark_result(filename_or_url):
     """
     Given a path or URL to a benchmark result manifest JSON file, return
@@ -29,37 +31,18 @@ def load_benchmark_result(filename_or_url):
     else:
         merged_calls = pandas.read_csv(merged_calls_path)
     logging.info("Done loading.")
-    del merged_calls["sample_info"]
-    for column in merged_calls.columns:
-        parseable = (
-            value_looks_parseable(x)
-            for x in merged_calls[column].dropna().head(100))
-        if all(parseable):
-            logging.debug("Parsing column: %s" % column)
-            merged_calls[column] = parse_values(merged_calls[column])
-    merged_calls["snv"] = (
-        (merged_calls.ref.str.len() == 1) &
-        (merged_calls.alt.str.len() == 1))
-    merged_calls["alt"] = merged_calls["alt"].fillna("")
+
+    merged_calls["interbase_start"] = (
+        merged_calls["interbase_start"].astype(int))
+    merged_calls["interbase_end"] = merged_calls["interbase_end"].astype(int)
     merged_calls["ref"] = merged_calls["ref"].fillna("")
+    merged_calls["alt"] = merged_calls["alt"].fillna("")
+
+    merged_calls = common.df_decode_json_columns(merged_calls)
+
     merged_calls._metadata.append("manifest")
     merged_calls.manifest = manifest
     return merged_calls
-
-eval_environment = {
-    "OrderedDict": collections.OrderedDict,
-    "nan": numpy.nan
-}
-def parse_values(series):
-    strings = series.fillna("None")
-    return strings.map(
-        dict((key, eval(key, eval_environment)) for key in strings.unique()))
-
-def value_looks_parseable(value):
-    return isinstance(value, string_types) and (
-        value.startswith("['") or
-        value.startswith("OrderedDict") or
-        value.startswith("{"))
 
 def load_url(filename_or_url):
     if (filename_or_url.startswith("http://") or

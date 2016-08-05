@@ -2,7 +2,10 @@ import subprocess
 import logging
 import os
 import collections
+import json
+from six import string_types
 
+import numpy
 import pandas
 import varlens
 
@@ -101,3 +104,46 @@ def git_info_for_guacamole_jar(jar_path):
             (guacamole_dir, error))
 
     return result
+
+def df_to_csv_json_encode_objects(df):
+    df = df.copy()
+    original_dtypes = list(df.dtypes.iteritems())
+    new_columns_order = []
+    for (column, dtype) in original_dtypes:
+        if (dtype == numpy.object_ and
+                not all(
+                    isinstance(x, string_types + (bool, int, float))
+                    for x in df[column].dropna())):
+            logging.info("JSON encoding: %s" % column)
+            new_name = "%s_json" % column
+            df[new_name] = [
+                json.dumps(x) for x in df[column]
+            ]
+            new_columns_order.append(new_name)
+        else:
+            new_columns_order.append(column)
+
+    return df[new_columns_order].to_csv(None, index=False)
+
+def df_decode_json_columns(df):
+    def load_json(s):
+        try:
+            return json.loads(x, object_pairs_hook=collections.OrderedDict)
+        except:
+            logging.warn("Couldn't parse: %s" % x)
+            raise
+
+    df = df.copy()
+    column_order = []
+    for column in df.columns:
+        if column.endswith("_json"):
+            logging.info("Decoding column: %s" % column)
+            new_name = column.replace("_json", "")
+            df[new_name] = [
+                load_json(x)
+                for x in df[column].fillna("null")
+            ]
+            column_order.append(new_name)
+        else:
+            column_order.append(column)
+    return df[column_order].copy()
