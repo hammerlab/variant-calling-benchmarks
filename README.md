@@ -51,12 +51,11 @@ If you do not want to submit your run to our google cloud storage bucket, omit t
 
 ## Running on a cluster
 
-We override `TMPDIR` because the default (`/tmp`) is not mounted on our cluster nodes. The node you call the script from and the spark driver node (not the executors) must be able to share the temporary files. The driver node must also be able to write to the directory specified in `--out-dir`.
+Note that both the node you launch this from and the driver node must be able to write to the directory given in `--out-dir`.
 
 ```
-mkdir -p tmp
 GUACAMOLE_HOME=~/sinai/git/guacamole
-TMPDIR=$(pwd)/tmp vcb-guacamole-cluster \
+time vcb-guacamole-cluster \
     base_config.json \
     infrastructure-configs/demeter.json \
     guacamole-configs/default.json \

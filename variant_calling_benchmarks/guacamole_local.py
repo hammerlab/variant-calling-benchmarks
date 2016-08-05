@@ -20,6 +20,7 @@ common.add_common_run_args(parser)
 
 def run(argv=sys.argv[1:]):
     args = parser.parse_args(argv)
+    temp_files.TEMP_DIR = args.out_dir
     config = load_config(*args.configs)
     try:
         main(args, config)
