@@ -15,31 +15,25 @@ import pandas
 import numpy
 import six
 
+import varcode
 import varlens
 import varlens.variants_util
 from pyensembl.locus import normalize_chromosome
 
 from ..common import load_benchmark_variants, git_info_for_guacamole_jar
-from .. import cloud_util
+from .. import cloud_util, analysis
 
 def sha1_hash(s, num_digits=16):
     return hashlib.sha1(s).hexdigest()[:num_digits]
 
 def write_results(args, config, patient_to_vcf, extra={}):
     guacamole_calls = load_results(patient_to_vcf)
+    vcf_metadata = load_result_vcf_header_metadata(patient_to_vcf)
 
     merged_calls = merge_calls_with_others(config, guacamole_calls)
     merged_calls_hash = sha1_hash(
         merged_calls.to_csv(None, index=False))
     logging.info("Merged calls hash: %s" % merged_calls_hash)
-
-    guacamole_calls_filename = "guacamole_calls.%s.%s.csv.gz" % (
-            config['benchmark'], merged_calls_hash)
-    guacamole_calls_csv = os.path.join(
-            args.out_dir, guacamole_calls_filename)
-    guacamole_calls.to_csv(
-        guacamole_calls_csv, index=False, compression="gzip")
-    logging.info("Wrote: %s" % guacamole_calls_csv)
 
     merged_calls_filename = "merged_calls.%s.%s.csv.gz" % (
             config['benchmark'], merged_calls_hash)
@@ -48,12 +42,7 @@ def write_results(args, config, patient_to_vcf, extra={}):
     merged_calls.to_csv(merged_calls_csv, index=False, compression="gzip")
     logging.info("Wrote: %s" % merged_calls_csv)
 
-    summary_filename = "summary.%s.%s.csv" % (
-        config['benchmark'], merged_calls_hash)
-    summary = summary_stats(config, merged_calls)
-    summary_csv = os.path.join(args.out_dir, summary_filename)
-    summary.to_csv(summary_csv, index=False)
-    logging.info("Wrote: %s" % summary_csv)
+    accuracy = analysis.accuracy_summary(merged_calls)
 
     manifest = collections.OrderedDict([
         ('user', getpass.getuser()),
@@ -63,8 +52,9 @@ def write_results(args, config, patient_to_vcf, extra={}):
         ('out_dir', os.path.abspath(args.out_dir)),
         ('merged_calls_hash', merged_calls_hash),
         ('merged_calls_filename', merged_calls_filename),
-        ('guacamole_calls_filename', guacamole_calls_filename),
         ('guacamole_git_info', git_info_for_guacamole_jar(args.guacamole_jar)),
+        ('accuracy_summary', accuracy),
+        ('vcf_metadata', vcf_metadata),
         ('arguments', {
             'args': args._get_args(),
             'kwargs': args._get_kwargs(),
@@ -167,6 +157,14 @@ def load_results(patient_to_vcf_paths):
         logging.info("Done.")
     return pandas.concat(dfs, ignore_index=True)
 
+def load_result_vcf_header_metadata(patient_to_vcf):
+    result = {}
+    for (patient, vcf_path) in patient_to_vcf.items():
+        reader = varcode.vcf.PyVCFReaderFromPathOrURL(vcf_path)
+        result[patient] = reader.vcf_reader.metadata
+        reader.close()
+    return result
+ 
 def yes_no_to_bool(value):
     if value == "YES":
         return True
@@ -284,50 +282,4 @@ def parse_joint_caller_fields(df):
     return df
 
 
-def summary_stats(config, merged):
-    def stat(bool_series):
-        return (
-            bool_series.sum(), len(bool_series), bool_series.mean() * 100.0)
 
-    rows = []
-    rows.append(("calls", "", merged["called_guacamole"].sum()))
-    rows.append((
-        "calls before filtering",
-        "",
-        merged.triggered.sum()))
-
-    for name in config["variants"]:
-        called_col = "called_%s" % name
-        rows.append(("calls", name, merged[called_col].sum()))
-
-        # with filters
-        rows.append(("recall with filters", name) + 
-            stat(merged.ix[merged[called_col]].called_guacamole))
-        rows.append(("precision with filters", name) + 
-            stat(merged.ix[merged[called_col]].called_guacamole))
-
-        # without filters
-        rows.append(
-            ("recall from pooled calling only without filters", name) +
-            stat(merged.ix[merged[called_col]].trigger_SOMATIC_POOLED))
-        rows.append(
-            ("recall individual calling only without filters", name) +
-            stat(merged.ix[merged[called_col]].trigger_SOMATIC_INDIVIDUAL))
-        rows.append(
-            ("precision without filters", name) +
-            stat(merged.ix[merged.triggered][called_col]))
-        rows.append(
-            ("precision both pooled and individual triggers firing", name) +
-            stat(
-                merged.ix[
-                    merged.trigger_SOMATIC_INDIVIDUAL &
-                    merged.trigger_SOMATIC_POOLED
-                ][called_col]))
-
-    columns = [
-        "stat", "comparison_dataset",
-        "numerator", "denominator", "percent",
-    ]
-    return pandas.DataFrame(
-        [list(row) + [None] * (len(columns) - len(row)) for row in rows],
-        columns=columns)
