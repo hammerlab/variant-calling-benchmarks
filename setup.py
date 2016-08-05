@@ -36,6 +36,7 @@ setup(
         "varcode",
         "varlens",
         "pyensembl",
+        "requests",
         "nose>=1.3.1",
         "typechecks>=0.0.2",
         "pandas>=0.18.1",
