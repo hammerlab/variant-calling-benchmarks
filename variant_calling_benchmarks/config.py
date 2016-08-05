@@ -88,7 +88,7 @@ def load_config(*filenames):
                 # We substitute the special THIS_DIR substitution immediately,
                 # since its value depends on the filename.
                 d = recursive_substitute(d, {
-                    'THIS_DIR': os.path.dirname(filename)
+                    'THIS_DIR': os.path.dirname(os.path.abspath(filename))
                 }, raise_on_keyerror=False)
                 substitutions.update(d.get("substitutions", {}))
                 merged.update(d)

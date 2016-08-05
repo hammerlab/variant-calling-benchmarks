@@ -4,42 +4,106 @@ Utilities for parsing the results of the guacamole joint caller.
 
 import collections
 import os
+import getpass
+import socket
+import hashlib
+import time
+import json
+import logging
+import gzip
 
 import pandas
 import numpy
 import six
 
+import varcode
 import varlens
 import varlens.variants_util
 from pyensembl.locus import normalize_chromosome
 
-from ..common import load_benchmark_variants
+from ..common import (
+    load_benchmark_variants,
+    git_info_for_guacamole_jar,
+    df_encode_json_columns)
+from .. import cloud_util, analysis
 
-def write_merged_calls(args, config, patient_to_vcf):
+def sha1_hash(s, num_digits=16):
+    return hashlib.sha1(s).hexdigest()[:num_digits]
+
+def write_results(args, config, patient_to_vcf, extra={}):
     guacamole_calls = load_results(patient_to_vcf)
-    guacamole_calls_csv = os.path.join(
-            args.out_dir,
-            "guacamole_calls.%s.csv" % (config['benchmark']))
-    guacamole_calls.to_csv(guacamole_calls_csv, index=False)
-    print("Wrote: %s" % guacamole_calls_csv)
+    vcf_metadata = load_result_vcf_header_metadata(patient_to_vcf)
 
-    merged_calls = merge_calls_with_others(
-        config, guacamole_calls)
-    merged_calls_csv = os.path.join(
-            args.out_dir,
-            "merged_calls.%s.csv" % (config['benchmark']))
-    merged_calls.to_csv(merged_calls_csv, index=False)
-    print("Wrote: %s" % merged_calls_csv)
+    merged_calls = merge_calls_with_others(config, guacamole_calls)
 
-    summary = summary_stats(
-        config, merged_calls)
-    summary_csv = os.path.join(
-            args.out_dir,
-            "summary.%s.csv" % (config['benchmark']))
-    summary.to_csv(summary_csv, index=False)
-    print("Wrote: %s" % summary_csv)
+    # Clean up merged_calls
+    del merged_calls["variant"]
+    merged_calls["alt"] = merged_calls["alt"].fillna("")
+    merged_calls["ref"] = merged_calls["ref"].fillna("")
+    merged_calls["snv"] = (
+        (merged_calls.ref.str.len() == 1) &
+        (merged_calls.alt.str.len() == 1))
+    del merged_calls["sample_info"]
+
+    merged_calls_csv_data = (
+        df_encode_json_columns(merged_calls).to_csv(None, index=False))
+    merged_calls_hash = sha1_hash(merged_calls_csv_data)
+    logging.info("Merged calls hash: %s" % merged_calls_hash)
+
+    merged_calls_filename = "merged_calls.%s.%s.csv.gz" % (
+            config['benchmark'], merged_calls_hash)
+    merged_calls_csv_path = os.path.join(
+            args.out_dir, merged_calls_filename)
+    with gzip.open(merged_calls_csv_path, "wb") as fd:
+        fd.write(merged_calls_csv_data)
+    del merged_calls_csv_data
+    logging.info("Wrote: %s" % merged_calls_csv_path)
+
+    accuracy = analysis.accuracy_summary(merged_calls)
+
+    manifest = collections.OrderedDict([
+        ('user', getpass.getuser()),
+        ('host', socket.gethostname()),
+        ("cwd", os.getcwd()),
+        ('time', time.asctime()),
+        ('out_dir', os.path.abspath(args.out_dir)),
+        ('merged_calls_hash', merged_calls_hash),
+        ('merged_calls_filename', merged_calls_filename),
+        ('guacamole_git_info', git_info_for_guacamole_jar(args.guacamole_jar)),
+        ('accuracy_summary', accuracy),
+        ('vcf_metadata', vcf_metadata),
+        ('arguments', {
+            'args': args._get_args(),
+            'kwargs': args._get_kwargs(),
+        }),
+        ('config', config),
+        ('extra', extra),
+    ])
+    manifest_json_dump = json.dumps(manifest, indent=2)
+    manifest_hash = sha1_hash(manifest_json_dump)
+    logging.info("Manifest hash: %s" % manifest_hash)
+    manifest_json = os.path.join(
+        args.out_dir,
+        "manifest.%s.%s.%s.json" % (
+            config['benchmark'], manifest_hash, merged_calls_hash))
+
+    with open(manifest_json, "w") as fd:
+        fd.write(manifest_json_dump)
+    logging.info("Wrote: %s" % manifest_json)
+
+    if args.out_bucket:
+        cloud_util.copy_to_google_storage_bucket(
+            merged_calls_csv_path,
+            args.out_bucket,
+            no_clobber=True)
+        cloud_util.copy_to_google_storage_bucket(
+            manifest_json,
+            args.out_bucket,
+            no_clobber=True)
+    return manifest
 
 JOIN_COLUMNS = [
+    "patient",
     "genome",
     "contig",
     "interbase_start",
@@ -53,18 +117,26 @@ def merge_calls_with_others(config, guacamole_calls_df):
     in the benchmark.
     '''
     merged = guacamole_calls_df
+    patients = set(config["patients"])
+    assert set(guacamole_calls_df.patient) == patients,\
+        "%s != %s" % (
+            set(guacamole_calls_df.patient), patients)
 
     for (name, info) in config['variants'].items():
         variant_file = info['path']
         df = load_benchmark_variants(variant_file)
+        if 'patient' not in df.columns:
+            assert len(patients) == 1, \
+                "VCF files only supported for single-patient benchmarks"
+            df["patient"] = list(patients)[0]
+
+        df = df.ix[df.patient.isin(patients)]
 
         # Since we load guacamole VCFs with varcode, the contigs will be
         # normalized, so we have to normalize them here.
         df["contig"] = df.contig.map(normalize_chromosome)
         df["called_%s" % name] = True
         join_columns = list(JOIN_COLUMNS)
-        if 'patient' in df.columns:
-            join_columns.append('patient')
 
         merged = pandas.merge(
             merged,
@@ -86,7 +158,6 @@ def merge_calls_with_others(config, guacamole_calls_df):
             merged[c] = merged[c].fillna(False).astype(bool)
     return merged
 
-
 def load_results(patient_to_vcf_paths):
     '''
     Given a dict of patient -> list of VCF paths written by guacamole for
@@ -94,12 +165,24 @@ def load_results(patient_to_vcf_paths):
     '''
     dfs = []
     for (patient, vcf_path) in patient_to_vcf_paths.items():
+        logging.info("Loading VCF: %s" % vcf_path)
         calls = varlens.variants_util.load_as_dataframe(
             vcf_path, only_passing=False)
         calls["patient"] = patient
+
+        logging.info("Done. Now parsing joint caller fields.")
         dfs.append(parse_joint_caller_fields(calls))
+        logging.info("Done.")
     return pandas.concat(dfs, ignore_index=True)
 
+def load_result_vcf_header_metadata(patient_to_vcf):
+    result = {}
+    for (patient, vcf_path) in patient_to_vcf.items():
+        reader = varcode.vcf.PyVCFReaderFromPathOrURL(vcf_path)
+        result[patient] = reader.vcf_reader.metadata
+        reader.close()
+    return result
+ 
 def yes_no_to_bool(value):
     if value == "YES":
         return True
@@ -130,7 +213,7 @@ def parse_mixture_likelihoods(strings):
             parsed_mixture = tuple(parsed_mixture)
             if not pandas.isnull(total_vaf):
                 numpy.testing.assert_almost_equal(total_vaf, 1.0, decimal=1)
-        result[parsed_mixture] = value
+        result[str(parsed_mixture)] = value
     return result
 
 def expand_sample_info_columns_one_row(full_row, result):
@@ -217,50 +300,4 @@ def parse_joint_caller_fields(df):
     return df
 
 
-def summary_stats(config, merged):
-    def stat(bool_series):
-        return (
-            bool_series.sum(), len(bool_series), bool_series.mean() * 100.0)
 
-    rows = []
-    rows.append(("calls", "", merged["called_guacamole"].sum()))
-    rows.append((
-        "calls before filtering",
-        "",
-        merged.triggered.sum()))
-
-    for name in config["variants"]:
-        called_col = "called_%s" % name
-        rows.append(("calls", name, merged[called_col].sum()))
-
-        # with filters
-        rows.append(("recall with filters", name) + 
-            stat(merged.ix[merged[called_col]].called_guacamole))
-        rows.append(("precision with filters", name) + 
-            stat(merged.ix[merged[called_col]].called_guacamole))
-
-        # without filters
-        rows.append(
-            ("recall from pooled calling only without filters", name) +
-            stat(merged.ix[merged[called_col]].trigger_SOMATIC_POOLED))
-        rows.append(
-            ("recall individual calling only without filters", name) +
-            stat(merged.ix[merged[called_col]].trigger_SOMATIC_INDIVIDUAL))
-        rows.append(
-            ("precision without filters", name) +
-            stat(merged.ix[merged.triggered][called_col]))
-        rows.append(
-            ("precision both pooled and individual triggers firing", name) +
-            stat(
-                merged.ix[
-                    merged.trigger_SOMATIC_INDIVIDUAL &
-                    merged.trigger_SOMATIC_POOLED
-                ][called_col]))
-
-    columns = [
-        "stat", "comparison_dataset",
-        "numerator", "denominator", "percent",
-    ]
-    return pandas.DataFrame(
-        [list(row) + [None] * (len(columns) - len(row)) for row in rows],
-        columns=columns)

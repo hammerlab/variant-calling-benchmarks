@@ -2,6 +2,8 @@ import os
 import tempfile
 import logging
 
+TEMP_DIR = None
+
 TEMPORARY_FILES = []
 
 def tempfile_path(prefix='', suffix='.data', contents=''):
@@ -12,6 +14,7 @@ def tempfile_path(prefix='', suffix='.data', contents=''):
     fd = tempfile.NamedTemporaryFile(
             prefix='tmp_variant_calling_benchmarks_' + prefix,
             suffix=suffix,
+            dir=TEMP_DIR,
             mode='w',
             delete=False)
     fd.write(contents)
