@@ -4,9 +4,8 @@ import collections
 import logging
 import os
 
-from six import string_types, StringIO
+from six import StringIO
 
-import numpy
 import pandas
 import requests
 
@@ -45,6 +44,10 @@ def load_benchmark_result(filename_or_url):
     return merged_calls
 
 def load_url(filename_or_url):
+    """
+    Given a path or URL, return the data. Google cloud project "gs://" URLs are
+    supported.
+    """
     if (filename_or_url.startswith("http://") or
             filename_or_url.startswith("https://")):
         return requests.get(filename_or_url).text
@@ -54,10 +57,17 @@ def load_url(filename_or_url):
         return fd.read()
 
 def load_json(filename_or_url):
+    """
+    Given a path or URL to a JSON file, return the decoded data.
+    """
     content = load_url(filename_or_url)
     return json.loads(content, object_pairs_hook=collections.OrderedDict)
 
 def accuracy_summary(merged):
+    """
+    Given a dataframe of merged guacamole / non-guacamole calls, return a dict
+    summarizing gucacamole recall and precision.
+    """
     def stat(bool_series):
         return collections.OrderedDict([
             ('numerator', bool_series.sum()),

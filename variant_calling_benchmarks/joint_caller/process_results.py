@@ -24,7 +24,7 @@ from pyensembl.locus import normalize_chromosome
 from ..common import (
     load_benchmark_variants,
     git_info_for_guacamole_jar,
-    df_to_csv_json_encode_objects)
+    df_encode_json_columns)
 from .. import cloud_util, analysis
 
 def sha1_hash(s, num_digits=16):
@@ -45,7 +45,8 @@ def write_results(args, config, patient_to_vcf, extra={}):
         (merged_calls.alt.str.len() == 1))
     del merged_calls["sample_info"]
 
-    merged_calls_csv_data = df_to_csv_json_encode_objects(merged_calls)
+    merged_calls_csv_data = (
+        df_encode_json_columns(merged_calls).to_csv(None, index=False))
     merged_calls_hash = sha1_hash(merged_calls_csv_data)
     logging.info("Merged calls hash: %s" % merged_calls_hash)
 

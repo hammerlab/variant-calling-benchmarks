@@ -79,6 +79,10 @@ def compress_file(filename, method='gzip', dry_run=False):
     return "%s.%s" % (filename, method_to_extension[method])
 
 def git_info_for_guacamole_jar(jar_path):
+    """
+    Given a path to a guacamole jar, return a dict of git info for the checkout
+    the jar comes from.
+    """
     result = collections.OrderedDict()
     target_dir = os.path.dirname(jar_path)
     error = None
@@ -105,7 +109,11 @@ def git_info_for_guacamole_jar(jar_path):
 
     return result
 
-def df_to_csv_json_encode_objects(df):
+def df_encode_json_columns(df):
+    """
+    Given a dataframe where some columns contain objects, JSON encode those
+    objects and append "_json" to their column names.
+    """
     df = df.copy()
     original_dtypes = list(df.dtypes.iteritems())
     new_columns_order = []
@@ -123,9 +131,12 @@ def df_to_csv_json_encode_objects(df):
         else:
             new_columns_order.append(column)
 
-    return df[new_columns_order].to_csv(None, index=False)
+    return df[new_columns_order]
 
 def df_decode_json_columns(df):
+    """
+    Inverse of df_encode_json_columns.
+    """
     def load_json(s):
         try:
             return json.loads(x, object_pairs_hook=collections.OrderedDict)
