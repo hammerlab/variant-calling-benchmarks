@@ -96,6 +96,7 @@ def write_results(args, config, patient_to_vcf, extra={}):
     return manifest
 
 JOIN_COLUMNS = [
+    "patient",
     "genome",
     "contig",
     "interbase_start",
@@ -109,18 +110,26 @@ def merge_calls_with_others(config, guacamole_calls_df):
     in the benchmark.
     '''
     merged = guacamole_calls_df
+    patients = set(config["patients"])
+    assert set(guacamole_calls_df.patient) == patients,\
+        "%s != %s" % (
+            set(guacamole_calls_df.patient), patients)
 
     for (name, info) in config['variants'].items():
         variant_file = info['path']
         df = load_benchmark_variants(variant_file)
+        if 'patient' not in df.columns:
+            assert len(patients) == 1, \
+                "VCF files only supported for single-patient benchmarks"
+            df["patient"] = list(patients)[0]
+
+        df = df.ix[df.patient.isin(patients)]
 
         # Since we load guacamole VCFs with varcode, the contigs will be
         # normalized, so we have to normalize them here.
         df["contig"] = df.contig.map(normalize_chromosome)
         df["called_%s" % name] = True
         join_columns = list(JOIN_COLUMNS)
-        if 'patient' in df.columns:
-            join_columns.append('patient')
 
         merged = pandas.merge(
             merged,
