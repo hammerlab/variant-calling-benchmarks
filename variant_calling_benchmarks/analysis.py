@@ -101,7 +101,7 @@ def accuracy_summary(merged):
             merged.ix[merged[called_col]].called_guacamole)
 
         sub_result["precision with filters"] = stat(
-            merged.ix[merged[called_col]].called_guacamole)
+            merged.ix[merged.called_guacamole][called_col])
 
         # without filters
         sub_result["recall from pooled calling only without filters"] = stat(
