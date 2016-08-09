@@ -2,7 +2,8 @@
 
 "substitutions": {
     "DREAM_ROOT": "gs://public-dream-data/",
-    "B37_FASTA": "/home/arahuja/Homo_sapiens_assembly19.fasta"
+    "B37_FASTA": "/home/arahuja/Homo_sapiens_assembly19.fasta",
+    "VCB_DATA_BUCKET": "gs://variant-calling-benchmarks-data/pt189/vcfs-redo-normal"
 },
 
 "spark_submit_arguments": [
