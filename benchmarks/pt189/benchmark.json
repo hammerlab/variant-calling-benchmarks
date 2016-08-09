@@ -118,7 +118,7 @@
                 "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Pelvic_Tumor/QC_E001.B882_PCT189_WES_Round_2.PE.WES.NGS.Human/PT189_Pelvic_Tumor/Processed/NGS.2_7_2b.WES/results/PT189_Pelvic_Tumor.PT189_Pelvic_Tumor.clean.dedup.recal.bam"
             }
         }
-    }
+    },
 
     "variants": {
         "filtered_mutect_strelka": {
