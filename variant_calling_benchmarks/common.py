@@ -55,7 +55,7 @@ def add_common_run_args(parser):
         help="Don't actually run guacamole")
 
 def load_benchmark_variants(variant_file):
-    if variant_file.endswith('vcf'):
+    if variant_file.endswith('.vcf') or variant_file.endswith('.vcf.gz'):
         df = varlens.variants_util.load_as_dataframe(
             variant_file, only_passing=False)
     else:

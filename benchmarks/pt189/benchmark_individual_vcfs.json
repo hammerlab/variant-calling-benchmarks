@@ -1,0 +1,251 @@
+{
+"benchmark": "pt189",
+"benchmark_description": "PT189",
+
+"reference": "$HG19_FASTA",
+
+"patients": {
+    "PT189": {
+        "reads": {
+            "normal_exome": {
+                "analyte": "dna",
+                "tissue_type": "normal",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_PBMC/Processed/NGS.2_7_2b.WES/results/PT189_PBMC.PT189_PBMC.clean.dedup.recal.bam"
+            },
+            "normal_exome_first_attempt": {
+                "analyte": "dna",
+                "tissue_type": "normal",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Normal_Exome/Processed/NGS.2_7_2b.WES/results/PT189_Normal_Exome.PT189_Normal_Exome.clean.dedup.recal.bam"
+            },
+            "tumor_primary_left_ovary_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Left_Ovary_Exome/Processed/NGS.2_7_2b.WES/results/PT189_Left_Ovary_Exome.PT189_Left_Ovary_Exome.clean.dedup.recal.bam"
+            },
+            "tumor_primary_left_ovary_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT_189_Left_Ovary_RNA/Processed/RAPiD.2_0_0/bams/PT_189_Left_Ovary_RNA.accepted_hits.sort.coord.bam"
+            },
+            "tumor_primary_right_ovary_exome_replica1": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Right_Ovary_L1/Processed/NGS.2_7_2b.WES/results/PT189_Right_Ovary_L1.PT189_Right_Ovary_L1.clean.dedup.recal.bam"
+            },
+            "tumor_primary_right_ovary_exome_replica2": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Right_Ovary_L2/Processed/NGS.2_7_2b.WES/results/PT189_Right_Ovary_L2.PT189_Right_Ovary_L2.clean.dedup.recal.bam"
+            },
+            "tumor_primary_right_ovary_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_Right_Ovary_RNA/Processed/RAPiD.2_0_0/bams/PT189_Right_Ovary_RNA.accepted_hits.sort.coord.bam"
+            },
+            "tumor_primary_uterus_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_Uterus_RNA/Processed/RAPiD.2_0_0/bams/PT189_Uterus_RNA.accepted_hits.sort.coord.bam"
+            },
+            "tumor_primary_uterus_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Uterus/Processed/NGS.2_7_2b.WES/results/PT189_Uterus.PT189_Uterus.clean.dedup.recal.bam"
+            },
+            "tumor_primary_colon_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_Tumor_Colon_RNA/Processed/RAPiD.2_0_0/bams/PT189_Tumor_Colon_RNA.accepted_hits.sort.coord.bam"
+            },
+            "tumor_primary_colon_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Colon/Processed/NGS.2_7_2b.WES/results/PT189_Colon.PT189_Colon.clean.dedup.recal.bam"
+            },
+            "tumor_primary_omentum_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_Omentum_RNA/Processed/RAPiD.2_0_0/bams/PT189_Omentum_RNA.accepted_hits.sort.coord.bam"
+            },
+            "tumor_primary_omentum_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_OMentum/Processed/NGS.2_7_2b.WES/results/PT189_OMentum.PT189_OMentum.clean.dedup.recal.bam"
+            },
+            "tumor_secondary_pelvic_sidewalls_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_9_12_RNA_Replacement/Processed/RAPiD.2_0_0/bams/PT189_9_12_RNA_Replacement.accepted_hits.sort.coord.bam"
+            },
+            "tumor_secondary_pelvic_sidewalls_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_9_12/Processed/NGS.2_7_2b.WES/results/PT189_9_12.PT189_9_12.clean.dedup.recal.bam"
+            },
+            "tumor_secondary_peritoneal_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_1_13_RNA_Replacement/Processed/RAPiD.2_0_0/bams/PT189_1_13_RNA_Replacement.accepted_hits.sort.coord.bam"
+            },
+            "tumor_secondary_peritoneal_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_6_13/Processed/NGS.2_7_2b.WES/results/PT189_6_13.PT189_6_13.clean.dedup.recal.bam"
+            },
+            "tumor_secondary_small_bowel_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_11_13_RNA/Processed/RAPiD.2_0_0/bams/PT189_11_13_RNA.accepted_hits.sort.coord.bam"
+            },
+            "tumor_secondary_small_bowel_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_11_13/Processed/NGS.2_7_2b.WES/results/PT189_11_13.PT189_11_13.clean.dedup.recal.bam"
+            },
+            "tumor_secondary_deep_fascia_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_6_14_Exome/Processed/NGS.2_7_2b.WES/results/PT189_6_14_Exome.PT189_6_14_Exome.clean.dedup.recal.bam"
+            },
+            "tumor_secondary_deep_fascia_rna": {
+                "analyte": "rna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_RNA/QC_S106.B202_PCT189_RNA.PE.RNASeqRibozero.RAPiD.Human/PT189_6_14_RNA_Replacement/Processed/RAPiD.2_0_0/bams/PT189_6_14_RNA_Replacement.accepted_hits.sort.coord.bam"
+            },
+            "tumor_secondary_pelvic_end_of_care_exome": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Pelvic_Tumor/QC_E001.B882_PCT189_WES_Round_2.PE.WES.NGS.Human/PT189_Pelvic_Tumor/Processed/NGS.2_7_2b.WES/results/PT189_Pelvic_Tumor.PT189_Pelvic_Tumor.clean.dedup.recal.bam"
+            }
+        }
+    }
+},
+
+"variants": {
+    "filtered_mutect_strelka": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/filtered_mutect_strelka_calls.csv"
+    },
+
+    "primary_colon_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_mutect.vcf.gz"
+    },
+    "primary_colon_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_strelka_indels.vcf.gz"
+    },
+    "primary_colon_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_strelka_snvs.vcf.gz"
+    },
+    "primary_left_ovary_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_mutect.vcf.gz"
+    },
+    "primary_left_ovary_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_strelka_indels.vcf.gz"
+    },
+    "primary_left_ovary_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_strelka_snvs.vcf.gz"
+    },
+    "primary_omentum_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_mutect.vcf.gz"
+    },
+    "primary_omentum_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_strelka_indels.vcf.gz"
+    },
+    "primary_omentum_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_strelka_snvs.vcf.gz"
+    },
+    "primary_right_ovary_replica1_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_mutect.vcf.gz"
+    },
+    "primary_right_ovary_replica1_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_strelka_indels.vcf.gz"
+    },
+    "primary_right_ovary_replica1_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_strelka_snvs.vcf.gz"
+    },
+    "primary_right_ovary_replica2_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_mutect.vcf.gz"
+    },
+    "primary_right_ovary_replica2_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_strelka_indels.vcf.gz"
+    },
+    "primary_right_ovary_replica2_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_strelka_snvs.vcf.gz"
+    },
+    "primary_uterus_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_mutect.vcf.gz"
+    },
+    "primary_uterus_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_strelka_indels.vcf.gz"
+    },
+    "primary_uterus_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_strelka_snvs.vcf.gz"
+    },
+    "secondary_pelvic_end_of_care_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_mutect.vcf.gz"
+    },
+    "secondary_pelvic_end_of_care_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_strelka_indels.vcf.gz"
+    },
+    "secondary_pelvic_end_of_care_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_strelka_snvs.vcf.gz"
+    },
+    "secondary_pelvic_sidewalls_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_mutect.vcf.gz"
+    },
+    "secondary_pelvic_sidewalls_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_strelka_indels.vcf.gz"
+    },
+    "secondary_pelvic_sidewalls_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_strelka_snvs.vcf.gz"
+    },
+    "secondary_peritoneal_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_mutect.vcf.gz"
+    },
+    "secondary_peritoneal_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_strelka_indels.vcf.gz"
+    },
+    "secondary_peritoneal_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_strelka_snvs.vcf.gz"
+    },
+    "secondary_small_bowel_mutect": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_mutect.vcf.gz"
+    },
+    "secondary_small_bowel_strelka_indels": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_strelka_indels.vcf.gz"
+    },
+    "secondary_small_bowel_strelka_snvs": {
+        "kind": "somatic",
+        "path": "$VCB_DATA/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_strelka_snvs.vcf.gz"
+    }
+}
+}
