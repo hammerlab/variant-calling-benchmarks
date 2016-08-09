@@ -28,6 +28,8 @@ from ..common import (
 from .. import cloud_util, analysis
 
 def sha1_hash(s, num_digits=16):
+    if hasattr(s, 'encode'):
+        s = s.encode()
     return hashlib.sha1(s).hexdigest()[:num_digits]
 
 def write_results(args, config, patient_to_vcf, extra={}):
