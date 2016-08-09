@@ -117,133 +117,134 @@
                 "tissue_type": "tumor",
                 "path": "$PT189_HDFS_BAMS/Illumina_DNA/PT189_Pelvic_Tumor/QC_E001.B882_PCT189_WES_Round_2.PE.WES.NGS.Human/PT189_Pelvic_Tumor/Processed/NGS.2_7_2b.WES/results/PT189_Pelvic_Tumor.PT189_Pelvic_Tumor.clean.dedup.recal.bam"
             }
-        },
-        "variants": {
-            "filtered_mutect_strelka": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/filtered_mutect_strelka_calls.csv"
-            },
+        }
+    }
 
-            "primary_colon_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_mutect.vcf.gz"
-            },
-            "primary_colon_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_strelka_indels.vcf.gz"
-            },
-            "primary_colon_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_strelka_snvs.vcf.gz"
-            },
-            "primary_left_ovary_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_mutect.vcf.gz"
-            },
-            "primary_left_ovary_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_strelka_indels.vcf.gz"
-            },
-            "primary_left_ovary_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_strelka_snvs.vcf.gz"
-            },
-            "primary_omentum_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_mutect.vcf.gz"
-            },
-            "primary_omentum_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_strelka_indels.vcf.gz"
-            },
-            "primary_omentum_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_strelka_snvs.vcf.gz"
-            },
-            "primary_right_ovary_replica1_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_mutect.vcf.gz"
-            },
-            "primary_right_ovary_replica1_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_strelka_indels.vcf.gz"
-            },
-            "primary_right_ovary_replica1_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_strelka_snvs.vcf.gz"
-            },
-            "primary_right_ovary_replica2_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_mutect.vcf.gz"
-            },
-            "primary_right_ovary_replica2_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_strelka_indels.vcf.gz"
-            },
-            "primary_right_ovary_replica2_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_strelka_snvs.vcf.gz"
-            },
-            "primary_uterus_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_mutect.vcf.gz"
-            },
-            "primary_uterus_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_strelka_indels.vcf.gz"
-            },
-            "primary_uterus_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_strelka_snvs.vcf.gz"
-            },
-            "secondary_pelvic_end_of_care_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_mutect.vcf.gz"
-            },
-            "secondary_pelvic_end_of_care_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_strelka_indels.vcf.gz"
-            },
-            "secondary_pelvic_end_of_care_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_strelka_snvs.vcf.gz"
-            },
-            "secondary_pelvic_sidewalls_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_mutect.vcf.gz"
-            },
-            "secondary_pelvic_sidewalls_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_strelka_indels.vcf.gz"
-            },
-            "secondary_pelvic_sidewalls_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_strelka_snvs.vcf.gz"
-            },
-            "secondary_peritoneal_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_mutect.vcf.gz"
-            },
-            "secondary_peritoneal_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_strelka_indels.vcf.gz"
-            },
-            "secondary_peritoneal_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_strelka_snvs.vcf.gz"
-            },
-            "secondary_small_bowel_mutect": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_mutect.vcf.gz"
-            },
-            "secondary_small_bowel_strelka_indels": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_strelka_indels.vcf.gz"
-            },
-            "secondary_small_bowel_strelka_snvs": {
-                "kind": "somatic",
-                "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_strelka_snvs.vcf.gz"
-            }
+    "variants": {
+        "filtered_mutect_strelka": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/filtered_mutect_strelka_calls.csv"
+        },
+
+        "primary_colon_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_mutect.vcf.gz"
+        },
+        "primary_colon_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_strelka_indels.vcf.gz"
+        },
+        "primary_colon_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_colon_strelka_snvs.vcf.gz"
+        },
+        "primary_left_ovary_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_mutect.vcf.gz"
+        },
+        "primary_left_ovary_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_strelka_indels.vcf.gz"
+        },
+        "primary_left_ovary_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_left_ovary_strelka_snvs.vcf.gz"
+        },
+        "primary_omentum_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_mutect.vcf.gz"
+        },
+        "primary_omentum_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_strelka_indels.vcf.gz"
+        },
+        "primary_omentum_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_omentum_strelka_snvs.vcf.gz"
+        },
+        "primary_right_ovary_replica1_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_mutect.vcf.gz"
+        },
+        "primary_right_ovary_replica1_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_strelka_indels.vcf.gz"
+        },
+        "primary_right_ovary_replica1_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica1_strelka_snvs.vcf.gz"
+        },
+        "primary_right_ovary_replica2_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_mutect.vcf.gz"
+        },
+        "primary_right_ovary_replica2_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_strelka_indels.vcf.gz"
+        },
+        "primary_right_ovary_replica2_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_right_ovary_replica2_strelka_snvs.vcf.gz"
+        },
+        "primary_uterus_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_mutect.vcf.gz"
+        },
+        "primary_uterus_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_strelka_indels.vcf.gz"
+        },
+        "primary_uterus_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_primary_uterus_strelka_snvs.vcf.gz"
+        },
+        "secondary_pelvic_end_of_care_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_mutect.vcf.gz"
+        },
+        "secondary_pelvic_end_of_care_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_strelka_indels.vcf.gz"
+        },
+        "secondary_pelvic_end_of_care_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_end_of_care_strelka_snvs.vcf.gz"
+        },
+        "secondary_pelvic_sidewalls_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_mutect.vcf.gz"
+        },
+        "secondary_pelvic_sidewalls_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_strelka_indels.vcf.gz"
+        },
+        "secondary_pelvic_sidewalls_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_pelvic_sidewalls_strelka_snvs.vcf.gz"
+        },
+        "secondary_peritoneal_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_mutect.vcf.gz"
+        },
+        "secondary_peritoneal_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_strelka_indels.vcf.gz"
+        },
+        "secondary_peritoneal_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_peritoneal_strelka_snvs.vcf.gz"
+        },
+        "secondary_small_bowel_mutect": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_mutect.vcf.gz"
+        },
+        "secondary_small_bowel_strelka_indels": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_strelka_indels.vcf.gz"
+        },
+        "secondary_small_bowel_strelka_snvs": {
+            "kind": "somatic",
+            "path": "$VCB_DATA_BUCKET/pt189/vcfs-redo-normal/vcf_somatic2_secondary_small_bowel_strelka_snvs.vcf.gz"
         }
     }
 }
