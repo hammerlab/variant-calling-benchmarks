@@ -9,7 +9,7 @@ import numpy
 import pandas
 import varlens
 
-def extract_loci_string(patient, variant_filenames):
+def extract_loci_string(patient, variant_filenames, genome=None):
     '''
     Given a patient and a list of variant CSV files, return a string
     like "chr1:2-10,chr2-50-51" that gives the loci of all variants
@@ -28,7 +28,7 @@ def extract_loci_string(patient, variant_filenames):
     '''
     loci = []
     for filename in variant_filenames:
-        df = load_benchmark_variants(filename)
+        df = load_benchmark_variants(filename, genome=genome)
         if 'patient' in df.columns:
             df = df.ix[df.patient == patient]
         for (i, row) in df.iterrows():
@@ -57,10 +57,10 @@ def add_common_run_args(parser):
     parser.add_argument("--skip-guacamole", action="store_true", default=False,
         help="Don't actually run guacamole")
 
-def load_benchmark_variants(variant_file):
+def load_benchmark_variants(variant_file, genome=None):
     if variant_file.endswith('.vcf') or variant_file.endswith('.vcf.gz'):
         df = varlens.variants_util.load_as_dataframe(
-            variant_file, only_passing=False)
+            variant_file, only_passing=False, genome=genome)
         del df["variant"]
     else:
         df = pandas.read_csv(variant_file)

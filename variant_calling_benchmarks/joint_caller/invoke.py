@@ -30,7 +30,7 @@ def make_arguments(config, patient, out_vcf, include_filtered=True):
     force_call_loci_string = extract_loci_string(patient, [
         x['path']
         for x in config['variants'].values()
-    ])
+    ], genome=config.get("reference_name"))
 
     force_call_loci_path = temp_files.tempfile_path(
             prefix='loci_',
