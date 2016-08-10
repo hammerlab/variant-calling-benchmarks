@@ -40,8 +40,6 @@ def write_results(args, config, patient_to_vcf, extra={}):
     merged_calls = merge_calls_with_others(config, guacamole_calls)
 
     # Clean up merged_calls
-    if "variant" in list(merged_calls.columns):
-        del merged_calls["variant"]
     if "sample_info" in list(merged_calls.columns):
         del merged_calls["sample_info"]
 
@@ -175,6 +173,7 @@ def load_results(patient_to_vcf_paths, genome=None):
         calls = varlens.variants_util.load_as_dataframe(
             vcf_path, only_passing=False, genome=genome)
         calls["patient"] = patient
+        del calls["variant"]
 
         logging.info("Done. Now parsing joint caller fields.")
         dfs.append(parse_joint_caller_fields(calls))

@@ -58,6 +58,7 @@ def load_benchmark_variants(variant_file):
     if variant_file.endswith('.vcf') or variant_file.endswith('.vcf.gz'):
         df = varlens.variants_util.load_as_dataframe(
             variant_file, only_passing=False)
+        del df["variant"]
     else:
         df = pandas.read_csv(variant_file)
     return df
