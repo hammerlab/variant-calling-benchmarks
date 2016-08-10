@@ -3,7 +3,9 @@
 "substitutions": {
     "AOCS_HDFS_BAMS": "hdfs:///datasets/ovarian/ega-tim",
     "PT189_HDFS_BAMS": "hdfs:///datasets/martignetti_ovarian/189",
+    "DREAM_ROOT": "hdfs:///datasets/dream/data/synthetic-challenge-1",
     "HG19_FASTA": "/hpc/users/ahujaa01/reference_genomes/hg19-reference/ucsc.hg19.fasta",
+    "B37_FASTA": "/hpc/users/ahujaa01/reference_genomes/Homo_sapiens_assembly19.fasta",
     "SPARK_HOME": "/hpc/users/willir31/sparks/spark-1.6.1-bin-hadoop2.6",
     "VCB_DATA": "/demeter/scratch/datasets/google-cloud-storage-mirror/variant-calling-benchmarks-data"
 },

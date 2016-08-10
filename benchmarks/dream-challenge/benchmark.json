@@ -25,6 +25,10 @@
     "published": {
         "kind": "somatic",
         "path": "$THIS_DIR/synthetic.challenge.set1.tumor.all.truth.vcf"
+    },
+    "mutect": {
+        "kind": "somatic",
+        "path": "$THIS_DIR/synthetic.challenge.set1.tumor.mutect.csv"
     }
 }
 
