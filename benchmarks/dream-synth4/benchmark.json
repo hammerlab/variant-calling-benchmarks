@@ -1,0 +1,40 @@
+{
+"benchmark": "dream-synth4",
+"benchmark_description": "DREAM SMC challenge 4",
+
+"reference": "$B37_FASTA",
+"reference_name": "b37",
+
+"patients": {
+    "syntheticset4": {
+        "reads": {
+            "normal_blood": {
+                "analyte": "dna",
+                "tissue_type": "normal",
+                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.normal.v2.bam"
+            },
+            "primary": {
+                "analyte": "dna",
+                "tissue_type": "tumor",
+                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.tumor.v2.bam"
+            }
+        }
+    }
+},
+
+"variants" : {
+    "published": {
+        "kind": "somatic",
+        "path": "$THIS_DIR/synthetic.challenge.set4.tumor.all.truth.vcf"
+    },
+    "mutect": {
+        "kind": "somatic",
+        "path": "$THIS_DIR/synthetic.challenge.set4.tumor.mutect.csv"
+    },
+    "strelka": {
+        "kind": "somatic",
+        "path": "$THIS_DIR/synthetic.challenge.set4.tumor.strelka.csv"
+    }
+}
+
+}
