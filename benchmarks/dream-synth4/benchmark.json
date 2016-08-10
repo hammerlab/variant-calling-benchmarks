@@ -11,12 +11,12 @@
             "normal_blood": {
                 "analyte": "dna",
                 "tissue_type": "normal",
-                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.normal.v2.bam"
+                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.normal.bam"
             },
             "primary": {
                 "analyte": "dna",
                 "tissue_type": "tumor",
-                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.tumor.v2.bam"
+                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.tumor.bam"
             }
         }
     }
