@@ -16,7 +16,7 @@
             "primary": {
                 "analyte": "dna",
                 "tissue_type": "tumor",
-                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.tumor.bam"
+                "path": "$DREAM_ROOT/synthetic-challenge-4/synthetic.challenge.set4.tumour.bam"
             }
         }
     }
