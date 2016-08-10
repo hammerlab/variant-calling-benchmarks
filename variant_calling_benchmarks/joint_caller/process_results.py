@@ -40,13 +40,16 @@ def write_results(args, config, patient_to_vcf, extra={}):
     merged_calls = merge_calls_with_others(config, guacamole_calls)
 
     # Clean up merged_calls
-    del merged_calls["variant"]
+    if "variant" in list(merged_calls.columns):
+        del merged_calls["variant"]
+    if "sample_info" in list(merged_calls.columns):
+        del merged_calls["sample_info"]
+
     merged_calls["alt"] = merged_calls["alt"].fillna("")
     merged_calls["ref"] = merged_calls["ref"].fillna("")
     merged_calls["snv"] = (
         (merged_calls.ref.str.len() == 1) &
         (merged_calls.alt.str.len() == 1))
-    del merged_calls["sample_info"]
 
     merged_calls_csv_data = (
         df_encode_json_columns(merged_calls).to_csv(None, index=False))
