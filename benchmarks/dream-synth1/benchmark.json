@@ -11,12 +11,12 @@
             "normal_blood": {
                 "analyte": "dna",
                 "tissue_type": "normal",
-                "path": "$DREAM_ROOT/synthetic.challenge.set1.normal.v2.bam"
+                "path": "$DREAM_ROOT/synthetic-challenge-1/synthetic.challenge.set1.normal.v2.bam"
             },
             "primary": {
                 "analyte": "dna",
                 "tissue_type": "tumor",
-                "path": "$DREAM_ROOT/synthetic.challenge.set1.tumor.v2.bam"
+                "path": "$DREAM_ROOT/synthetic-challenge-1/synthetic.challenge.set1.tumor.v2.bam"
             }
         }
     }
@@ -30,6 +30,10 @@
     "mutect": {
         "kind": "somatic",
         "path": "$THIS_DIR/synthetic.challenge.set1.tumor.mutect.csv"
+    },
+    "strelka": {
+        "kind": "somatic",
+        "path": "$THIS_DIR/synthetic.challenge.set1.tumor.strelka.csv"
     }
 }
 
