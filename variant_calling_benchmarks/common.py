@@ -44,6 +44,9 @@ def add_common_run_args(parser):
         help="Path to guacamole-deps-only-VERSION.jar")
     parser.add_argument("--patient", nargs="+",
         help="One or more patients to run. Default: all patients are run.")
+
+    parser.add_argument("--only-passing", action="store_true", default=False,
+        help="Have guacamole output only passing calls")
     
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--out-bucket")
@@ -138,7 +141,7 @@ def df_decode_json_columns(df):
     """
     Inverse of df_encode_json_columns.
     """
-    def load_json(s):
+    def load_json(x):
         try:
             return json.loads(x, object_pairs_hook=collections.OrderedDict)
         except:

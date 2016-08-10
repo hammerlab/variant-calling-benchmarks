@@ -8,7 +8,7 @@ import os
 from .. import temp_files
 from ..common import extract_loci_string
 
-def make_arguments(config, patient, out_vcf):
+def make_arguments(config, patient, out_vcf, include_filtered=True):
     '''
     Parameters
     -----------
@@ -47,7 +47,8 @@ def make_arguments(config, patient, out_vcf):
     arguments.extend(
         ["--sample-names"] + list(reads.keys()))
 
-    arguments.append("--include-filtered")
+    if include_filtered:
+        arguments.append("--include-filtered")
     if only_somatic:
         arguments.append("--only-somatic")
 

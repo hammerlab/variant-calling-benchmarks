@@ -48,7 +48,8 @@ def main(args, config):
             config["spark_submit_arguments"] + 
             ["--jars", args.guacamole_dependencies_jar] +
             ["--class", "org.hammerlab.guacamole.Main", args.guacamole_jar] +
-            invoke.make_arguments(config, patient, out_vcf))
+            invoke.make_arguments(
+                config, patient, out_vcf, include_filtered=not args.only_passing))
 
         if args.skip_guacamole:
             logging.info("Skipping guacamole run with arguments %s" % str(
