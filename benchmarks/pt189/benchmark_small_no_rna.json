@@ -1,5 +1,5 @@
 {
-"benchmark": "pt189",
+"benchmark": "pt189_small_no_rna",
 "benchmark_description": "PT189",
 
 "reference": "$HG19_FASTA",
