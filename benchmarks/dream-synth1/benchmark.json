@@ -1,6 +1,6 @@
 {
-"benchmark": "dream",
-"benchmark_description": "DREAM SMC challenge",
+"benchmark": "dream-synth1",
+"benchmark_description": "DREAM SMC challenge 1",
 
 "reference": "$B37_FASTA",
 "reference_name": "b37",
