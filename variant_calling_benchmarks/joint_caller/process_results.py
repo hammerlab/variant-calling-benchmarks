@@ -59,6 +59,8 @@ def write_results(args, config, patient_to_vcf, extra={}):
     merged_calls_csv_path = os.path.join(
             args.out_dir, merged_calls_filename)
     with gzip.open(merged_calls_csv_path, "wb") as fd:
+        if hasattr(merged_calls_csv_data, 'encode'):
+            merged_calls_csv_data = merged_calls_csv_data.encode()
         fd.write(merged_calls_csv_data)
     del merged_calls_csv_data
     logging.info("Wrote: %s" % merged_calls_csv_path)

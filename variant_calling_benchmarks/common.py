@@ -95,13 +95,13 @@ def git_info_for_guacamole_jar(jar_path):
         logging.info("Inferred guacamole repository dir: %s" % guacamole_dir)
         try:
             result["repository_path"] = guacamole_dir
-            result["status"] = subprocess.check_output(["git", "status"],
-                cwd=guacamole_dir).strip()
-            result["commit"] = subprocess.check_output(
+            result["status"] = str(subprocess.check_output(["git", "status"],
+                cwd=guacamole_dir).strip())
+            result["commit"] = str(subprocess.check_output(
                 ["git", "log", "-1", "--format='%H'"],
-                cwd=guacamole_dir).strip()
-            result["diff"] = subprocess.check_output(
-                ["git", "diff"], cwd=guacamole_dir).strip()
+                cwd=guacamole_dir).strip())
+            result["diff"] = str(subprocess.check_output(
+                ["git", "diff"], cwd=guacamole_dir).strip())
         except Exception as e:
             error = str(e)
     else:
