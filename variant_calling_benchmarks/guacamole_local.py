@@ -49,7 +49,8 @@ def main(args, config):
                 args.guacamole_dependencies_jar
             ])] +
             ["org.hammerlab.guacamole.Main"] +
-            invoke.make_arguments(config, patient, out_vcf))
+            invoke.make_arguments(
+                config, patient, out_vcf, include_filtered=not args.only_passing))
 
         if args.skip_guacamole:
             logging.info("Skipping guacamole run with arguments %s" % str(

@@ -33,19 +33,21 @@ def sha1_hash(s, num_digits=16):
     return hashlib.sha1(s).hexdigest()[:num_digits]
 
 def write_results(args, config, patient_to_vcf, extra={}):
-    guacamole_calls = load_results(patient_to_vcf)
+    genome = config.get('reference_name')
+    guacamole_calls = load_results(patient_to_vcf, genome=genome)
     vcf_metadata = load_result_vcf_header_metadata(patient_to_vcf)
 
     merged_calls = merge_calls_with_others(config, guacamole_calls)
 
     # Clean up merged_calls
-    del merged_calls["variant"]
+    if "sample_info" in list(merged_calls.columns):
+        del merged_calls["sample_info"]
+
     merged_calls["alt"] = merged_calls["alt"].fillna("")
     merged_calls["ref"] = merged_calls["ref"].fillna("")
     merged_calls["snv"] = (
         (merged_calls.ref.str.len() == 1) &
         (merged_calls.alt.str.len() == 1))
-    del merged_calls["sample_info"]
 
     merged_calls_csv_data = (
         df_encode_json_columns(merged_calls).to_csv(None, index=False))
@@ -57,6 +59,8 @@ def write_results(args, config, patient_to_vcf, extra={}):
     merged_calls_csv_path = os.path.join(
             args.out_dir, merged_calls_filename)
     with gzip.open(merged_calls_csv_path, "wb") as fd:
+        if hasattr(merged_calls_csv_data, 'encode'):
+            merged_calls_csv_data = merged_calls_csv_data.encode()
         fd.write(merged_calls_csv_data)
     del merged_calls_csv_data
     logging.info("Wrote: %s" % merged_calls_csv_path)
@@ -160,7 +164,7 @@ def merge_calls_with_others(config, guacamole_calls_df):
             merged[c] = merged[c].fillna(False).astype(bool)
     return merged
 
-def load_results(patient_to_vcf_paths):
+def load_results(patient_to_vcf_paths, genome=None):
     '''
     Given a dict of patient -> list of VCF paths written by guacamole for
     that patient, return a dataframe giving the calls for all patients.
@@ -169,8 +173,9 @@ def load_results(patient_to_vcf_paths):
     for (patient, vcf_path) in patient_to_vcf_paths.items():
         logging.info("Loading VCF: %s" % vcf_path)
         calls = varlens.variants_util.load_as_dataframe(
-            vcf_path, only_passing=False)
+            vcf_path, only_passing=False, genome=genome)
         calls["patient"] = patient
+        del calls["variant"]
 
         logging.info("Done. Now parsing joint caller fields.")
         dfs.append(parse_joint_caller_fields(calls))

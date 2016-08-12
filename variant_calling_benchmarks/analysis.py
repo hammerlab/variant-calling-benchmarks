@@ -70,9 +70,9 @@ def accuracy_summary(merged):
     """
     def stat(bool_series):
         return collections.OrderedDict([
-            ('numerator', bool_series.sum()),
-            ('denominator', len(bool_series)),
-            ('percent', bool_series.mean() * 100.0),
+            ('numerator', int(bool_series.sum())),
+            ('denominator', int(len(bool_series))),
+            ('percent', float(bool_series.mean() * 100.0)),
         ])
 
     rows = []

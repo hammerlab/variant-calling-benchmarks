@@ -8,7 +8,7 @@ import os
 from .. import temp_files
 from ..common import extract_loci_string
 
-def make_arguments(config, patient, out_vcf):
+def make_arguments(config, patient, out_vcf, include_filtered=True):
     '''
     Parameters
     -----------
@@ -30,7 +30,7 @@ def make_arguments(config, patient, out_vcf):
     force_call_loci_string = extract_loci_string(patient, [
         x['path']
         for x in config['variants'].values()
-    ])
+    ], genome=config.get("reference_name"))
 
     force_call_loci_path = temp_files.tempfile_path(
             prefix='loci_',
@@ -47,7 +47,8 @@ def make_arguments(config, patient, out_vcf):
     arguments.extend(
         ["--sample-names"] + list(reads.keys()))
 
-    arguments.append("--include-filtered")
+    if include_filtered:
+        arguments.append("--include-filtered")
     if only_somatic:
         arguments.append("--only-somatic")
 

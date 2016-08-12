@@ -9,7 +9,7 @@ import numpy
 import pandas
 import varlens
 
-def extract_loci_string(patient, variant_filenames):
+def extract_loci_string(patient, variant_filenames, genome=None):
     '''
     Given a patient and a list of variant CSV files, return a string
     like "chr1:2-10,chr2-50-51" that gives the loci of all variants
@@ -28,7 +28,7 @@ def extract_loci_string(patient, variant_filenames):
     '''
     loci = []
     for filename in variant_filenames:
-        df = load_benchmark_variants(filename)
+        df = load_benchmark_variants(filename, genome=genome)
         if 'patient' in df.columns:
             df = df.ix[df.patient == patient]
         for (i, row) in df.iterrows():
@@ -44,6 +44,9 @@ def add_common_run_args(parser):
         help="Path to guacamole-deps-only-VERSION.jar")
     parser.add_argument("--patient", nargs="+",
         help="One or more patients to run. Default: all patients are run.")
+
+    parser.add_argument("--only-passing", action="store_true", default=False,
+        help="Have guacamole output only passing calls")
     
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--out-bucket")
@@ -54,10 +57,11 @@ def add_common_run_args(parser):
     parser.add_argument("--skip-guacamole", action="store_true", default=False,
         help="Don't actually run guacamole")
 
-def load_benchmark_variants(variant_file):
+def load_benchmark_variants(variant_file, genome=None):
     if variant_file.endswith('.vcf') or variant_file.endswith('.vcf.gz'):
         df = varlens.variants_util.load_as_dataframe(
-            variant_file, only_passing=False)
+            variant_file, only_passing=False, genome=genome)
+        del df["variant"]
     else:
         df = pandas.read_csv(variant_file)
     return df
@@ -91,13 +95,13 @@ def git_info_for_guacamole_jar(jar_path):
         logging.info("Inferred guacamole repository dir: %s" % guacamole_dir)
         try:
             result["repository_path"] = guacamole_dir
-            result["status"] = subprocess.check_output(["git", "status"],
-                cwd=guacamole_dir).strip()
-            result["commit"] = subprocess.check_output(
+            result["status"] = str(subprocess.check_output(["git", "status"],
+                cwd=guacamole_dir).strip())
+            result["commit"] = str(subprocess.check_output(
                 ["git", "log", "-1", "--format='%H'"],
-                cwd=guacamole_dir).strip()
-            result["diff"] = subprocess.check_output(
-                ["git", "diff"], cwd=guacamole_dir).strip()
+                cwd=guacamole_dir).strip())
+            result["diff"] = str(subprocess.check_output(
+                ["git", "diff"], cwd=guacamole_dir).strip())
         except Exception as e:
             error = str(e)
     else:
@@ -137,7 +141,7 @@ def df_decode_json_columns(df):
     """
     Inverse of df_encode_json_columns.
     """
-    def load_json(s):
+    def load_json(x):
         try:
             return json.loads(x, object_pairs_hook=collections.OrderedDict)
         except:
